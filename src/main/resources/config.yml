@@ -1,3 +1,5 @@
 
 points-folders:
   - './points'
+rewards-folders:
+  - './rewards'

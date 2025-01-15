@@ -1,0 +1,117 @@
+title: '累计奖励'
+inventory:
+  - '框框框框框框框框框'
+  - '框　一二三四五　框'
+  - '框框框框框框框框下'
+default-operations:
+  not-reach:
+    - '&c未达到%point%点数'
+  available:
+    - '&a左键&7 | &f领取奖励'
+  already:
+    - '&a&l你已经领取过该奖励了'
+rewards:
+  一:
+    # 要求哪种点数
+    type: default
+    # 要求点数到达多少
+    point: 10
+    # 可领取时的图标
+    material: APPLE
+    # 不可领取(未到达点数)时的图标
+    material-not-reach: APPLE
+    # 已领取时的图标
+    material-already: CHEST
+    # 图标名，%point% 代表上面 point 的值，均支持 PAPI 变量
+    display: '&e&l累计奖励 x%point%'
+    lore:
+      - ''
+      - '  &f点数到达%point%时可领取'
+      - '  &7- &e100金币'
+      - ''
+      - operation
+    # operations 选项可选，不填则使用 default-operations 的值
+    operations:
+      not-reach:
+        - '&c未达到%point%点数'
+      available:
+        - '&a左键&7 | &f领取奖励'
+      already:
+        - '&a&l你已经领取过该奖励了'
+    # 奖励命令
+    # [console]控制台执行
+    # [player]玩家执行
+    # [message]聊天提示
+    # 均支持 PAPI 变量
+    rewards:
+      - '[console]money give %player_name% 100'
+  二:
+    type: default
+    point: 50
+    material: APPLE
+    material-not-reach: APPLE
+    material-already: CHEST
+    display: '&e&l累计奖励 x%point%'
+    lore:
+      - ''
+      - '  &f点数到达%point%时可领取'
+      - '  &7- &e500金币'
+      - ''
+      - operation
+    rewards:
+      - '[console]money give %player_name% 500'
+  三:
+    type: default
+    point: 100
+    material: APPLE
+    material-not-reach: APPLE
+    material-already: CHEST
+    display: '&e&l累计奖励 x%point%'
+    lore:
+      - ''
+      - '  &f点数到达%point%时可领取'
+      - '  &7- &e1000金币'
+      - ''
+      - operation
+    rewards:
+      - '[console]money give %player_name% 1000'
+  四:
+    type: default
+    point: 200
+    material: APPLE
+    material-not-reach: APPLE
+    material-already: CHEST
+    display: '&e&l累计奖励 x%point%'
+    lore:
+      - ''
+      - '  &f点数到达%point%时可领取'
+      - '  &7- &e2000金币'
+      - ''
+      - operation
+    rewards:
+      - '[console]money give %player_name% 2000'
+  五:
+    type: default
+    point: 300
+    material: APPLE
+    material-not-reach: APPLE
+    material-already: CHEST
+    display: '&e&l累计奖励 x%point%'
+    lore:
+      - ''
+      - '  &f点数到达%point%时可领取'
+      - '  &7- &e3000金币'
+      - ''
+      - operation
+    rewards:
+      - '[console]money give %player_name% 3000'
+other-icons:
+  框:
+    material: WHITE_STAINED_GLASS_PANE
+    display: '&f '
+  # 打开其它菜单的示例
+  下:
+    material: LIME_STAINED_GLASS_PANE
+    display: '&e下一页'
+    left-click-commands:
+      - '[console]sweetrewards open example %player_name%'
