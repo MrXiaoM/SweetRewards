@@ -1,5 +1,8 @@
 package top.mrxiaom.sweet.rewards.databases;
 
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataOutput;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,14 +15,13 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
+import top.mrxiaom.pluginbase.utils.Bytes;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.func.AbstractPluginHolder;
 import top.mrxiaom.sweet.rewards.func.entry.PointType;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +32,7 @@ import java.util.TreeMap;
 public class PointsDatabase extends AbstractPluginHolder implements IDatabase, Listener {
     private final Map<String, PointType> pointTypeMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, Map<String, Long>> cache = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, Long> cooldown = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public PointsDatabase(SweetRewards plugin) {
         super(plugin);
         registerBungee();
@@ -84,7 +87,37 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
 
     @Override
     public void receiveBungee(String subChannel, DataInputStream in) throws IOException {
-        // TODO: 解析 BungeeCord 消息，收到命令时移除玩家缓存
+        if (subChannel.equals("SWEETREWARDS_DELETE_CACHE")) {
+            String key = in.readUTF();
+            long now = System.currentTimeMillis();
+            long next = cooldown.getOrDefault(key, now);
+            if (now >= next) { // 以免 BungeeCord 特有的一下一堆消息涌入，做个冷却
+                cooldown.put(key, now + 3000L);
+                cache.remove(key);
+            }
+        }
+    }
+
+    public void sendDeleteCache(String key) {
+        Player player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+        if (player != null) {
+            ByteArrayDataOutput out = Bytes.newDataOutput();
+            out.writeUTF("Forward");
+            out.writeUTF("ALL");
+            out.writeUTF("SWEETREWARDS_DELETE_CACHE");
+            try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+                DataOutputStream msg = new DataOutputStream(output)
+            ) {
+                msg.writeUTF(key);
+
+                byte[] bytes = output.toByteArray();
+                out.writeShort(bytes.length);
+                out.write(bytes);
+                player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+            } catch (IOException e) {
+                warn(e);
+            }
+        }
     }
 
     @Nullable
@@ -149,6 +182,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
     private void setPoints(Connection conn, String id, String table, String key, long point) throws SQLException {
         Map<String, Long> cacheMap = cache(key);
         cacheMap.put(id, point);
+        sendDeleteCache(key);
         if (plugin.options.database().isMySQL()) {
             try (PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO `" + table + "`(`player`,`point`) VALUES(?, ?) on duplicate key update `point`=?;"
