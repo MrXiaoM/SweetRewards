@@ -16,7 +16,7 @@ rewards:
     type: default
     # 要求点数到达多少
     point: 10
-    # 可领取时的图标
+    # 可领取时的图标，可使用冒号添加子ID，如 'WOOL:3'
     material: APPLE
     # 不可领取(未到达点数)时的图标
     material-not-reach: APPLE

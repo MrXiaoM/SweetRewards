@@ -97,10 +97,19 @@ public class Rewards extends AbstractPluginHolder {
                     });
             if (already) {
                 item.setType(reward.materialAlready);
+                if (reward.dataAlready != null) {
+                    item.setDurability(reward.dataAlready.shortValue());
+                }
             } else if (notReach) {
                 item.setType(reward.materialNotReach);
+                if (reward.dataNotReach != null) {
+                    item.setDurability(reward.dataNotReach.shortValue());
+                }
             } else {
                 item.setType(reward.material);
+                if (reward.data != null) {
+                    item.setDurability(reward.data.shortValue());
+                }
             }
         }
         return null;
