@@ -22,7 +22,10 @@ rewards:
     material-not-reach: APPLE
     # 已领取时的图标
     material-already: CHEST
-    # 图标名，%point% 代表上面 point 的值，均支持 PAPI 变量
+    # 图标名
+    # %point% 代表上面设定的 point 值
+    # %points% 代表玩家拥有的点数值
+    # 均支持 PAPI 变量
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''

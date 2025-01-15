@@ -14,12 +14,16 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
+import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.gui.IGui;
 import top.mrxiaom.pluginbase.utils.PAPI;
+import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
+import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
 import top.mrxiaom.sweet.rewards.func.AbstractPluginHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,22 +68,64 @@ public class Rewards extends AbstractPluginHolder {
             PointsDatabase db = plugin.getPointsDatabase();
             long point = db.getPoint(reward.type, player);
             long require = reward.point;
-            // TODO: 添加主要图标
-            if (point < require) {
-
+            boolean already = instance.hasUsed(reward);
+            boolean notReach = point < require;
+            String sPoint = String.valueOf(require);
+            String sPoints = String.valueOf(point);
+            ItemStack item = reward.icon.generateIcon(player,
+                    name -> name.replace("%point%", sPoint)
+                            .replace("%points%", sPoints),
+                    lore -> {
+                        List<String> newLore = new ArrayList<>();
+                        for (String s : lore) {
+                            if (!s.equals("operation")) {
+                                newLore.add(s.replace("%point%", sPoint)
+                                        .replace("%points%", sPoints));
+                                continue;
+                            }
+                            List<String> operation = already
+                                    ? reward.opAlready
+                                    : (notReach
+                                    ? reward.opNotReach
+                                    : reward.opAvailable);
+                            for (String line : operation) {
+                                newLore.add(line.replace("%point%", sPoint)
+                                        .replace("%points%", sPoints));
+                            }
+                        }
+                        return newLore;
+                    });
+            if (already) {
+                item.setType(reward.materialAlready);
+            } else if (notReach) {
+                item.setType(reward.materialNotReach);
+            } else {
+                item.setType(reward.material);
             }
         }
         return null;
     }
 
     public Gui createGui(Player player) {
-        return new Gui(player);
+        List<String> keys = new ArrayList<>();
+        for (Reward reward : rewards.values()) {
+            keys.add(reward.key);
+        }
+        RewardStateDatabase db = plugin.getRewardStateDatabase();
+        Map<String, Boolean> states = db.checkStates(player, keys);
+        return new Gui(player, states);
     }
 
     public class Gui implements IGui {
-        protected Player player;
-        private Gui(Player player) {
+        private Player player;
+        private Map<String, Boolean> states;
+        private Gui(Player player, Map<String, Boolean> states) {
             this.player = player;
+            this.states = states;
+        }
+
+        public boolean hasUsed(Reward reward) {
+            return states.getOrDefault(reward.key, false);
         }
 
         @Override
@@ -137,10 +183,24 @@ public class Rewards extends AbstractPluginHolder {
                     PointsDatabase db = plugin.getPointsDatabase();
                     long point = db.getPoint(reward.type, player);
                     long require = reward.point;
-                    // TODO: 处理点击奖励图标
-                    if (point < require) {
-
+                    if (hasUsed(reward)) {
+                        // TODO: 提示该奖励已领取过
+                        return;
                     }
+                    if (point < require) {
+                        // TODO: 提示点数未到达
+                        return;
+                    }
+                    states.put(reward.key, true);
+                    RewardStateDatabase db1 = plugin.getRewardStateDatabase();
+                    db1.markState(player, reward.key);
+                    Pair<String, Object>[] pairs = Pair.array(2);
+                    pairs[0] = Pair.of("%point%", require);
+                    pairs[1] = Pair.of("%points%", point);
+                    for (IAction a : reward.rewards) {
+                        a.run(player, pairs);
+                    }
+                    updateInventory(view);
                     return;
                 }
                 LoadedIcon icon = otherIcons.get(id);

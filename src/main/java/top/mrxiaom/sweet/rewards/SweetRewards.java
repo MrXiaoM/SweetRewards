@@ -6,6 +6,7 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.EconomyHolder;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
+import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
 
 public class SweetRewards extends BukkitPlugin {
     public static SweetRewards getInstance() {
@@ -23,15 +24,21 @@ public class SweetRewards extends BukkitPlugin {
         );
     }
     private PointsDatabase pointsDatabase;
+    private RewardStateDatabase rewardStateDatabase;
 
     public PointsDatabase getPointsDatabase() {
         return pointsDatabase;
     }
 
+    public RewardStateDatabase getRewardStateDatabase() {
+        return rewardStateDatabase;
+    }
+
     @Override
     protected void beforeEnable() {
         options.registerDatabase(
-                pointsDatabase = new PointsDatabase(this)
+                pointsDatabase = new PointsDatabase(this),
+                rewardStateDatabase = new RewardStateDatabase(this)
         );
         if (Util.isPresent("me.clip.placeholderapi.expansion.PlaceholderExpansion")) {
             new Placeholder(this).register();
