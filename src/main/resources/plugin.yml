@@ -1,0 +1,11 @@
+name: SweetRewards
+version: '${version}'
+main: top.mrxiaom.sweet.rewards.SweetRewards
+api-version: 1.13
+depend: [  ]
+softdepend: [ PlaceholderAPI ]
+authors: [ MrXiaoM ]
+commands:
+  sweetrewards:
+    description: 'The main command of SweetRewards'
+    aliases: [ sr, rewards ]
