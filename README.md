@@ -15,15 +15,15 @@ Minecraft 累计点数奖励插件。
 根命令 `/sweetrewards`，别名 `/sr` 或 `/rewards`。  
 `<>`包裹的是必选参数，`[]`包裹的是可选参数。
 
-| 命令                              | 描述                       | 权限                            |
-|---------------------------------|--------------------------|-------------------------------|
-| `/rewards get <点数类型>`           | 查看自己的点数数量                | `sweet.rewards.get`           |
-| `/rewards get <点数类型> <玩家>`      | 查看某人的点数数量                | `sweet.rewards.get.other`/控制台 |
-| `/rewards set <点数类型> <玩家> <点数>` | 设置玩家的点数                  | OP/控制台                        |
-| `/rewards add <点数数量> <玩家> <点数>` | 增加玩家的点数                  | OP/控制台                        |
-| `/rewards open <菜单ID>`          | 为自己打开菜单                  | 在菜单配置中设定                      |
-| `/rewards open <菜单ID> <玩家>`     | 为某人打开菜单，需要目标玩家拥有菜单配置中的权限 | `sweet.rewards.open-other`    |
-| `/rewards reload database`      | 重新连接数据库                  | OP/控制台                        |
-| `/rewards reload`               | 重载配置文件                   | OP/控制台                        |
+| 命令                              | 描述                       | 权限                         |
+|---------------------------------|--------------------------|----------------------------|
+| `/rewards get <点数类型>`           | 查看自己的点数数量                | `sweet.rewards.get`        |
+| `/rewards get <点数类型> <玩家>`      | 查看某人的点数数量                | `sweet.rewards.get.other`  |
+| `/rewards set <点数类型> <玩家> <点数>` | 设置玩家的点数                  | OP/控制台                     |
+| `/rewards add <点数数量> <玩家> <点数>` | 增加玩家的点数                  | OP/控制台                     |
+| `/rewards open <菜单ID>`          | 为自己打开菜单                  | 在菜单配置中设定                   |
+| `/rewards open <菜单ID> <玩家>`     | 为某人打开菜单，需要目标玩家拥有菜单配置中的权限 | `sweet.rewards.open-other` |
+| `/rewards reload database`      | 重新连接数据库                  | OP/控制台                     |
+| `/rewards reload`               | 重载配置文件                   | OP/控制台                     |
 
 由于本插件的定位并不是经济或者点券，故点数只增不减，不会设置需要额外做下界检查的 减少点数命令，也不会支持小数。
