@@ -45,7 +45,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (toSet < 0) {
                 return Messages.commands__set__not_number.tm(sender);
             }
-            Long points = db.setPoint(type, target, toSet);
+            Long points = db.setPoints(type, target, toSet);
             return (points == null ? Messages.commands__set__fail : Messages.commands__set__success).tm(sender,
                     Pair.of("%player%", target.getName()),
                     Pair.of("%display%", type.display),
@@ -66,7 +66,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (toAdd <= 0) {
                 return Messages.commands__add__not_number.tm(sender);
             }
-            Long points = db.addPoint(type, target, toAdd);
+            Long points = db.addPoints(type, target, toAdd);
             return (points == null ? Messages.commands__add__fail : Messages.commands__add__success).tm(sender,
                         Pair.of("%player%", target.getName()),
                         Pair.of("%display%", type.display),
@@ -98,7 +98,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 target = (Player) sender;
                 other = false;
             }
-            long points = db.getPoint(type, target);
+            long points = db.getPoints(type, target);
             return (other ? Messages.commands__get__success_other : Messages.commands__get__success).tm(sender,
                     Pair.of("%player%", target.getName()),
                     Pair.of("%display%", type.display),

@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -73,7 +72,7 @@ public class Rewards extends AbstractPluginHolder {
         Reward reward = rewards.get(id);
         if (reward != null) {
             PointsDatabase db = plugin.getPointsDatabase();
-            long point = db.getPoint(reward.type, player);
+            long point = db.getPoints(reward.type, player);
             long require = reward.point;
             boolean already = instance.hasUsed(reward);
             boolean notReach = point < require;
@@ -197,7 +196,7 @@ public class Rewards extends AbstractPluginHolder {
                 Reward reward = rewards.get(id);
                 if (reward != null && click.equals(ClickType.LEFT)) {
                     PointsDatabase db = plugin.getPointsDatabase();
-                    long point = db.getPoint(reward.type, player);
+                    long point = db.getPoints(reward.type, player);
                     long require = reward.point;
                     if (hasUsed(reward)) {
                         Messages.gui__reward__already.tm(player);

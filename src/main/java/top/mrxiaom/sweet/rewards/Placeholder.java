@@ -44,7 +44,7 @@ public class Placeholder extends PlaceholderExpansion {
             PointsDatabase db = plugin.getPointsDatabase();
             PointType type = db.get(id);
             if (type == null) return "TYPE_NOT_FOUND";
-            long point = db.getPoint(type, player);
+            long point = db.getPoints(type, player);
             return String.valueOf(point);
         }
         return super.onPlaceholderRequest(player, params);

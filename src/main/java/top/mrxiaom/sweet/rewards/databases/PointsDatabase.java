@@ -100,13 +100,13 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
         }
         return map;
     }
-    public long getPoint(PointType type, Player player) {
+    public long getPoints(PointType type, Player player) {
         String key = plugin.key(player);
         Map<String, Long> cacheMap = cache(key);
         Long cacheValue = cacheMap.get(type.id);
         if (cacheValue != null) return cacheValue;
         try (Connection conn = plugin.getConnection()) {
-            long point = getPoint(conn, type.table, key, type.initialValue);
+            long point = getPoints(conn, type.table, key, type.initialValue);
             cacheMap.put(type.id, point);
             return point;
         } catch (SQLException e) {
@@ -114,7 +114,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
         }
         return type.initialValue;
     }
-    private long getPoint(Connection conn, String table, String key, long def) throws SQLException {
+    private long getPoints(Connection conn, String table, String key, long def) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(
                 "SELECT * FROM `" + table + "` WHERE `player`=?;"
         )) {
@@ -124,28 +124,28 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
             }
         }
     }
-    public Long addPoint(PointType type, Player player, long toAdd) {
+    public Long addPoints(PointType type, Player player, long toAdd) {
         try (Connection conn = plugin.getConnection()) {
             String key = plugin.key(player);
-            long point = getPoint(conn, type.table, key, type.initialValue);
+            long point = getPoints(conn, type.table, key, type.initialValue);
             long newPoint = point + toAdd;
-            setPoint(conn, type.id, type.table, key, newPoint);
+            setPoints(conn, type.id, type.table, key, newPoint);
             return newPoint;
         } catch (SQLException e) {
             warn(e);
             return null;
         }
     }
-    public Long setPoint(PointType type, Player player, long point) {
+    public Long setPoints(PointType type, Player player, long point) {
         try (Connection conn = plugin.getConnection()) {
-            setPoint(conn, type.id, type.table, plugin.key(player), point);
+            setPoints(conn, type.id, type.table, plugin.key(player), point);
             return point;
         } catch (SQLException e) {
             warn(e);
             return null;
         }
     }
-    private void setPoint(Connection conn, String id, String table, String key, long point) throws SQLException {
+    private void setPoints(Connection conn, String id, String table, String key, long point) throws SQLException {
         Map<String, Long> cacheMap = cache(key);
         cacheMap.put(id, point);
         if (plugin.options.database().isMySQL()) {
