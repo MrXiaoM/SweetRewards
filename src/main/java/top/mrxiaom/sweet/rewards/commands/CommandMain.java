@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.rewards.commands;
         
 import com.google.common.collect.Lists;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -80,13 +81,13 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (type == null) {
                 return Messages.commands__get__not_found.tm(sender);
             }
-            Player target;
+            OfflinePlayer target;
             boolean other;
             if (args.length == 3) {
                 if (!sender.hasPermission("sweet.rewards.get.other")) {
                     return Messages.commands__no_permission.tm(sender);
                 }
-                target = Util.getOnlinePlayer(args[2]).orElse(null);
+                target = Util.getOfflinePlayer(args[2]).orElse(null);
                 if (target == null) {
                     return Messages.player__not_found.tm(sender);
                 }

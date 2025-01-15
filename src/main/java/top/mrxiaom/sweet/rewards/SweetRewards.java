@@ -1,5 +1,6 @@
 package top.mrxiaom.sweet.rewards;
         
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -54,7 +55,7 @@ public class SweetRewards extends BukkitPlugin {
         getLogger().info("SweetRewards 加载完毕");
     }
 
-    public String key(Player player) {
+    public String key(OfflinePlayer player) {
         return player.getName(); // TODO
     }
 }

@@ -1,5 +1,6 @@
 package top.mrxiaom.sweet.rewards.databases;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ import java.util.TreeMap;
 
 public class PointsDatabase extends AbstractPluginHolder implements IDatabase, Listener {
     private final Map<String, PointType> pointTypeMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private final Map<String, Map<String, Long>> cache = new TreeMap<>();
+    private final Map<String, Map<String, Long>> cache = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public PointsDatabase(SweetRewards plugin) {
         super(plugin);
         registerBungee();
@@ -100,7 +101,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
         }
         return map;
     }
-    public long getPoints(PointType type, Player player) {
+    public long getPoints(PointType type, OfflinePlayer player) {
         String key = plugin.key(player);
         Map<String, Long> cacheMap = cache(key);
         Long cacheValue = cacheMap.get(type.id);
@@ -124,7 +125,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
             }
         }
     }
-    public Long addPoints(PointType type, Player player, long toAdd) {
+    public Long addPoints(PointType type, OfflinePlayer player, long toAdd) {
         try (Connection conn = plugin.getConnection()) {
             String key = plugin.key(player);
             long point = getPoints(conn, type.table, key, type.initialValue);
@@ -136,7 +137,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
             return null;
         }
     }
-    public Long setPoints(PointType type, Player player, long point) {
+    public Long setPoints(PointType type, OfflinePlayer player, long point) {
         try (Connection conn = plugin.getConnection()) {
             setPoints(conn, type.id, type.table, plugin.key(player), point);
             return point;
