@@ -26,8 +26,18 @@ public enum Messages implements IHolderAccessor {
     commands__no_permission("&c你没有执行该命令的权限"),
     player__not_found("&e玩家不在线 (或不存在)"),
     player__only("&e该操作只能由玩家执行"),
-    commands__help__normal(),
-    commands__help__admin(),
+    commands__help__normal("",
+            "&d&lSweetRewards&r &b累计奖励",
+            "&f/rewards open <菜单ID> &7打开菜单",
+            ""),
+    commands__help__admin("",
+            "&d&lSweetRewards&r &b累计奖励",
+            "&f/rewards open <菜单ID> &7打开菜单",
+            "&f/rewards add <点数类型> <玩家> <点数> &7增加玩家的点数",
+            "&f/rewards set <点数类型> <玩家> <点数> &7设置玩家的点数",
+            "&f/rewards reload database &7重新连接数据库",
+            "&f/rewards reload &7重载配置文件",
+            ""),
 
 
     ;
