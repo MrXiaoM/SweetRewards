@@ -27,6 +27,7 @@ dependencies {
 
     compileOnly("me.clip:placeholderapi:2.11.6")
 
+    implementation("de.tr7zw:item-nbt-api:2.14.1")
     implementation("com.zaxxer:HikariCP:4.0.3") { isTransitive = false }
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("top.mrxiaom:PluginBase:1.2.0")
@@ -45,6 +46,7 @@ tasks {
             "org.jetbrains.annotations" to "annotations.jetbrains",
             "top.mrxiaom.pluginbase" to "base",
             "com.zaxxer.hikari" to "hikari",
+            "de.tr7zw.changeme.nbtapi" to "nbtapi",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
         }
