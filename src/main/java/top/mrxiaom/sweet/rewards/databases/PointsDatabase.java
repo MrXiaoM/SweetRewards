@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.SweetRewards;
@@ -83,6 +84,11 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
     @Override
     public void receiveBungee(String subChannel, DataInputStream in) throws IOException {
         // TODO: 解析 BungeeCord 消息，收到命令时移除玩家缓存
+    }
+
+    @Nullable
+    public PointType get(String id) {
+        return pointTypeMap.get(id);
     }
 
     private Map<String, Long> cache(String key) {
