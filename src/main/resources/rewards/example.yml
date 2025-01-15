@@ -1,4 +1,6 @@
+# 界面标题，支持 PAPI 变量
 title: '累计奖励'
+# 界面布局
 inventory:
   - '框框框框框框框框框'
   - '框　一二三四五　框'
@@ -10,6 +12,7 @@ default-operations:
     - '&a左键&7 | &f领取奖励'
   already:
     - '&a&l你已经领取过该奖励了'
+# 累计奖励列表以及图标配置
 rewards:
   一:
     # 要求哪种点数
@@ -108,6 +111,7 @@ rewards:
       - operation
     rewards:
       - '[console]money give %player_name% 3000'
+# 额外图标配置
 other-icons:
   框:
     material: WHITE_STAINED_GLASS_PANE

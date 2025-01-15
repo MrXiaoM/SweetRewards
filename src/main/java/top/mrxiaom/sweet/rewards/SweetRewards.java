@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.EconomyHolder;
+import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
 import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
@@ -36,6 +37,9 @@ public class SweetRewards extends BukkitPlugin {
 
     @Override
     protected void beforeEnable() {
+        LanguageManager.inst()
+                .setLangFile("messages.yml")
+                .register(Messages.class, Messages::holder);
         options.registerDatabase(
                 pointsDatabase = new PointsDatabase(this),
                 rewardStateDatabase = new RewardStateDatabase(this)

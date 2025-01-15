@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
+import top.mrxiaom.sweet.rewards.Messages;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.func.AbstractModule;
 
@@ -26,9 +27,14 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         if (args.length == 1 && "hello".equalsIgnoreCase(args[0])) {
             return t(sender, "Hello World!");
         }
-        if (args.length == 1 && "reload".equalsIgnoreCase(args[0]) && sender.isOp()) {
+        if (args.length >= 1 && "reload".equalsIgnoreCase(args[0]) && sender.isOp()) {
+            if (args.length == 2 && "database".equalsIgnoreCase(args[1])) {
+                plugin.options.database().reloadConfig();
+                plugin.options.database().reconnect();
+                return Messages.commands__reload_database.tm(sender);
+            }
             plugin.reloadConfig();
-            return t(sender, "&a配置文件已重载");
+            return Messages.commands__reload.tm(sender);
         }
         return true;
     }
