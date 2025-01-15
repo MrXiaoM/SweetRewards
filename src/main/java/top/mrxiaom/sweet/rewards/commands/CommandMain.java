@@ -74,6 +74,37 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         Pair.of("%added%", toAdd),
                         Pair.of("%points%", points == null ? -1L : points.longValue()));
         }
+        if (args.length == 4 && "get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
+            PointsDatabase db = plugin.getPointsDatabase();
+            PointType type = db.get(args[1]);
+            if (type == null) {
+                return Messages.commands__get__not_found.tm(sender);
+            }
+            Player target;
+            boolean other;
+            if (args.length == 3) {
+                if (!sender.hasPermission("sweet.rewards.get.other")) {
+                    return Messages.commands__no_permission.tm(sender);
+                }
+                target = Util.getOnlinePlayer(args[2]).orElse(null);
+                if (target == null) {
+                    return Messages.player__not_found.tm(sender);
+                }
+                other = true;
+            } else {
+                if (!(sender instanceof Player)) {
+                    return Messages.player__only.tm(sender);
+                }
+                target = (Player) sender;
+                other = false;
+            }
+            long points = db.getPoint(type, target);
+            return (other ? Messages.commands__get__success_other : Messages.commands__get__success).tm(sender,
+                    Pair.of("%player%", target.getName()),
+                    Pair.of("%display%", type.display),
+                    Pair.of("%id%", type.id),
+                    Pair.of("%points%", points));
+        }
         if (args.length >= 2 && "open".equalsIgnoreCase(args[0])) {
             RewardsManager manager = RewardsManager.inst();
             Rewards rewards = manager.get(args[1]);
@@ -123,7 +154,10 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            return startsWith(sender.isOp() ? listOpArg0 : listArg0, args[0]);
+            List<String> list = new ArrayList<>();
+            if (sender.hasPermission("sweet.rewards.get")) list.add("get");
+            list.addAll(sender.isOp() ? listOpArg0 : listArg0);
+            return startsWith(list, args[0]);
         }
         if (args.length == 2) {
             if ("set".equalsIgnoreCase(args[0]) && sender.isOp()) {
@@ -131,6 +165,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             if ("add".equalsIgnoreCase(args[0]) && sender.isOp()) {
                 return startsWith(RewardsManager.inst().keys(), args[1]);
+            }
+            if ("get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
+                return startsWith(RewardsManager.inst().keys(sender), args[1]);
             }
             if ("open".equalsIgnoreCase(args[0])) {
                 return startsWith(RewardsManager.inst().keys(sender), args[1]);
@@ -144,6 +181,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 return null;
             }
             if ("add".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return null;
+            }
+            if ("get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get.other")) {
                 return null;
             }
             if ("open".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.open-other")) {
