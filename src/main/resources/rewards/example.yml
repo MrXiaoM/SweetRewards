@@ -5,6 +5,10 @@ inventory:
   - '框框框框框框框框框'
   - '框　一二三四五　框'
   - '框框框框框框框框下'
+# 打开界面所需权限，%id% 会被替换为此界面的ID
+# 注释此条目则不需要权限
+permission: 'sweet.rewards.open.%id%'
+# 默认 operations 配置
 default-operations:
   not-reach:
     - '&c未达到%point%点数'

@@ -14,6 +14,10 @@ public enum Messages implements IHolderAccessor {
     gui__reward__not_reach("&e你没有足够的%type%领取这个奖励"),
     commands__reload("&a配置文件已重载"),
     commands__reload_database("&a已重新连接到数据库"),
+    commands__open__not_found("&e找不到这个菜单"),
+    commands__no_permission("&c你没有执行该命令的权限"),
+    player__not_found("&e玩家不在线 (或不存在)"),
+    player__only("&e该操作只能由玩家执行"),
     commands__help__normal(),
     commands__help__admin(),
 

@@ -12,12 +12,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.gui.IGui;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
+import top.mrxiaom.sweet.rewards.Messages;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
 import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
@@ -32,15 +34,20 @@ import java.util.function.BiConsumer;
 import static top.mrxiaom.pluginbase.func.AbstractGuiModule.getInventory;
 
 public class Rewards extends AbstractPluginHolder {
+    public final String id;
     public final String title;
     public final char[] inventory;
+    public final @Nullable String permission;
     public final Map<Character, Reward> rewards = new HashMap<>();
     public final Map<Character, LoadedIcon> otherIcons = new HashMap<>();
     public Rewards(SweetRewards plugin, MemorySection config, String id) {
         super(plugin);
         ConfigurationSection section;
-        title = config.getString("title", "");
-        inventory = getInventory(config, "inventory");
+        this.id = id;
+        this.title = config.getString("title", "");
+        this.inventory = getInventory(config, "inventory");
+        String perm = config.getString("permission", null);
+        this.permission = perm == null ? null : perm.replace("%id%", id);
         List<String> defOpNotReach = config.getStringList("default-operations.not-reach");
         List<String> defOpAvailable = config.getStringList("default-operations.available");
         List<String> defOpAlready = config.getStringList("default-operations.already");
@@ -48,7 +55,7 @@ public class Rewards extends AbstractPluginHolder {
         if (section != null) for (String key : section.getKeys(false)) {
             Reward reward = Reward.load(plugin, id, section, key, defOpNotReach, defOpAvailable, defOpAlready);
             if (reward != null) {
-                rewards.put(reward.id, reward);
+                this.rewards.put(reward.id, reward);
             }
         }
         section = config.getConfigurationSection("other-icons");
@@ -58,7 +65,7 @@ public class Rewards extends AbstractPluginHolder {
                 plugin.warn("[rewards/" + id + "] 其它图标 " + key + " 的图标ID过长，请改成单个字符");
                 continue;
             }
-            otherIcons.put(key.charAt(0), icon);
+            this.otherIcons.put(key.charAt(0), icon);
         }
     }
 
@@ -193,11 +200,11 @@ public class Rewards extends AbstractPluginHolder {
                     long point = db.getPoint(reward.type, player);
                     long require = reward.point;
                     if (hasUsed(reward)) {
-                        // TODO: 提示该奖励已领取过
+                        Messages.gui__reward__already.tm(player);
                         return;
                     }
                     if (point < require) {
-                        // TODO: 提示点数未到达
+                        Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
                         return;
                     }
                     states.put(reward.key, true);
