@@ -10,11 +10,14 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
+import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.Messages;
 import top.mrxiaom.sweet.rewards.SweetRewards;
+import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
 import top.mrxiaom.sweet.rewards.func.AbstractModule;
 import top.mrxiaom.sweet.rewards.func.RewardsManager;
+import top.mrxiaom.sweet.rewards.func.entry.PointType;
 import top.mrxiaom.sweet.rewards.func.entry.Rewards;
 
 import java.util.*;
@@ -28,6 +31,49 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 4 && "set".equalsIgnoreCase(args[0]) && sender.isOp()) {
+            PointsDatabase db = plugin.getPointsDatabase();
+            PointType type = db.get(args[1]);
+            if (type == null) {
+                return Messages.commands__set__not_found.tm(sender);
+            }
+            Player target = Util.getOnlinePlayer(args[2]).orElse(null);
+            if (target == null) {
+                return Messages.player__not_found.tm(sender);
+            }
+            long toSet = Util.parseLong(args[3]).orElse(0L);
+            if (toSet < 0) {
+                return Messages.commands__set__not_number.tm(sender);
+            }
+            Long points = db.setPoint(type, target, toSet);
+            return (points == null ? Messages.commands__set__fail : Messages.commands__set__success).tm(sender,
+                    Pair.of("%player%", target.getName()),
+                    Pair.of("%display%", type.display),
+                    Pair.of("%id%", type.id),
+                    Pair.of("%points%", points == null ? toSet : points.longValue()));
+        }
+        if (args.length == 4 && "add".equalsIgnoreCase(args[0]) && sender.isOp()) {
+            PointsDatabase db = plugin.getPointsDatabase();
+            PointType type = db.get(args[1]);
+            if (type == null) {
+                return Messages.commands__add__not_found.tm(sender);
+            }
+            Player target = Util.getOnlinePlayer(args[2]).orElse(null);
+            if (target == null) {
+                return Messages.player__not_found.tm(sender);
+            }
+            long toAdd = Util.parseLong(args[3]).orElse(0L);
+            if (toAdd <= 0) {
+                return Messages.commands__add__not_number.tm(sender);
+            }
+            Long points = db.addPoint(type, target, toAdd);
+            return (points == null ? Messages.commands__add__fail : Messages.commands__add__success).tm(sender,
+                        Pair.of("%player%", target.getName()),
+                        Pair.of("%display%", type.display),
+                        Pair.of("%id%", type.id),
+                        Pair.of("%added%", toAdd),
+                        Pair.of("%points%", points == null ? -1L : points.longValue()));
+        }
         if (args.length >= 2 && "open".equalsIgnoreCase(args[0])) {
             RewardsManager manager = RewardsManager.inst();
             Rewards rewards = manager.get(args[1]);
@@ -71,7 +117,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     private static final List<String> listArg0 = Lists.newArrayList(
             "open");
     private static final List<String> listOpArg0 = Lists.newArrayList(
-            "open", "reload");
+            "open", "add", "set", "reload");
     private static final List<String> listArgs1Reload = Lists.newArrayList("database");
     @Nullable
     @Override
@@ -80,6 +126,12 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             return startsWith(sender.isOp() ? listOpArg0 : listArg0, args[0]);
         }
         if (args.length == 2) {
+            if ("set".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return startsWith(RewardsManager.inst().keys(), args[1]);
+            }
+            if ("add".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return startsWith(RewardsManager.inst().keys(), args[1]);
+            }
             if ("open".equalsIgnoreCase(args[0])) {
                 return startsWith(RewardsManager.inst().keys(sender), args[1]);
             }
@@ -88,6 +140,12 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
         }
         if (args.length == 3) {
+            if ("set".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return null;
+            }
+            if ("add".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return null;
+            }
             if ("open".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.open-other")) {
                 return null;
             }

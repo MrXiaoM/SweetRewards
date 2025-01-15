@@ -124,21 +124,25 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
             }
         }
     }
-    public void addPoint(PointType type, Player player, long toAdd) {
+    public Long addPoint(PointType type, Player player, long toAdd) {
         try (Connection conn = plugin.getConnection()) {
             String key = plugin.key(player);
             long point = getPoint(conn, type.table, key, type.initialValue);
             long newPoint = point + toAdd;
             setPoint(conn, type.id, type.table, key, newPoint);
+            return newPoint;
         } catch (SQLException e) {
             warn(e);
+            return null;
         }
     }
-    public void setPoint(PointType type, Player player, long point) {
+    public Long setPoint(PointType type, Player player, long point) {
         try (Connection conn = plugin.getConnection()) {
             setPoint(conn, type.id, type.table, plugin.key(player), point);
+            return point;
         } catch (SQLException e) {
             warn(e);
+            return null;
         }
     }
     private void setPoint(Connection conn, String id, String table, String key, long point) throws SQLException {
