@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.SweetRewards;
-import top.mrxiaom.sweet.rewards.func.entry.PointType;
 import top.mrxiaom.sweet.rewards.func.entry.Rewards;
 
 import java.io.File;

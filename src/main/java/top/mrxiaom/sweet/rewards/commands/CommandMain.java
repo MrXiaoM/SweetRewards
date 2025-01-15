@@ -1,5 +1,5 @@
 package top.mrxiaom.sweet.rewards.commands;
-        
+
 import com.google.common.collect.Lists;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -21,7 +21,9 @@ import top.mrxiaom.sweet.rewards.func.RewardsManager;
 import top.mrxiaom.sweet.rewards.func.entry.PointType;
 import top.mrxiaom.sweet.rewards.func.entry.Rewards;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @AutoRegister
 public class CommandMain extends AbstractModule implements CommandExecutor, TabCompleter, Listener {
