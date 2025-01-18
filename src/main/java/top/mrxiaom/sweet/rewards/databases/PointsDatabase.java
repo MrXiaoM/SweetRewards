@@ -157,6 +157,7 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
         try (PreparedStatement ps = conn.prepareStatement(
                 "SELECT * FROM `" + table + "` WHERE `player`=?;"
         )) {
+            ps.setString(1, key);
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (!resultSet.next()) return def;
                 return resultSet.getLong("point");
