@@ -123,25 +123,22 @@ public class Rewards extends AbstractPluginHolder {
     }
 
     public Gui createGui(Player player) {
-        List<String> keys = new ArrayList<>();
-        for (Reward reward : rewards.values()) {
-            keys.add(reward.key);
-        }
+        List<Character> keys = new ArrayList<>(rewards.keySet());
         RewardStateDatabase db = plugin.getRewardStateDatabase();
-        Map<String, Boolean> states = db.checkStates(player, keys);
+        Map<Character, Boolean> states = db.checkStates(player, id, keys);
         return new Gui(player, states);
     }
 
     public class Gui implements IGui {
         private Player player;
-        private Map<String, Boolean> states;
-        private Gui(Player player, Map<String, Boolean> states) {
+        private Map<Character, Boolean> states;
+        private Gui(Player player, Map<Character, Boolean> states) {
             this.player = player;
             this.states = states;
         }
 
         public boolean hasUsed(Reward reward) {
-            return states.getOrDefault(reward.key, false);
+            return states.getOrDefault(reward.id, false);
         }
 
         @Override
@@ -192,9 +189,9 @@ public class Rewards extends AbstractPluginHolder {
                             InventoryView view, InventoryClickEvent event
         ) {
             event.setCancelled(true);
-            Character id = getClickedId(slot);
-            if (id != null) {
-                Reward reward = rewards.get(id);
+            Character clickId = getClickedId(slot);
+            if (clickId != null) {
+                Reward reward = rewards.get(clickId);
                 if (reward != null && click.equals(ClickType.LEFT)) {
                     PointsDatabase db = plugin.getPointsDatabase();
                     long point = db.getPoints(reward.type, player);
@@ -207,9 +204,9 @@ public class Rewards extends AbstractPluginHolder {
                         Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
                         return;
                     }
-                    states.put(reward.key, true);
+                    states.put(reward.id, true);
                     RewardStateDatabase db1 = plugin.getRewardStateDatabase();
-                    db1.markState(player, reward.key);
+                    db1.markState(player, id, reward.id);
                     Pair<String, Object>[] pairs = Pair.array(2);
                     pairs[0] = Pair.of("%point%", require);
                     pairs[1] = Pair.of("%points%", point);
@@ -219,7 +216,7 @@ public class Rewards extends AbstractPluginHolder {
                     updateInventory(view);
                     return;
                 }
-                LoadedIcon icon = otherIcons.get(id);
+                LoadedIcon icon = otherIcons.get(clickId);
                 if (icon != null) {
                     icon.click(player, click);
                 }

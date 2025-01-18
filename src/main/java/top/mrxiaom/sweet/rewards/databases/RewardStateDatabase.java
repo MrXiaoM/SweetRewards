@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,24 +26,35 @@ public class RewardStateDatabase extends AbstractPluginHolder implements IDataba
         try (PreparedStatement ps = conn.prepareStatement(
                 "CREATE TABLE if NOT EXISTS `" + table + "`(" +
                         "`player` VARCHAR(48)," +
+                        "`id` VARCHAR(48)," +
                         "`state` VARCHAR(48)" +
                 ");")) {
             ps.execute();
         }
     }
 
-    public Map<String, Boolean> checkStates(Player player, List<String> keys) {
+    public Map<Character, Boolean> checkStates(Player player, String id, List<Character> keys) {
         try (Connection conn = plugin.getConnection()) {
-            Map<String, Boolean> states = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            Map<Character, Boolean> states = new HashMap<>();
             String playerKey = plugin.key(player);
-            for (String key : keys) {
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "SELECT * FROM `" + table + "` WHERE `player`=? AND `state`=?"
-                )) {
-                    ps.setString(1, playerKey);
-                    ps.setString(2, key);
-                    try (ResultSet result = ps.executeQuery()) {
-                        states.put(key, result.next());
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM `" + table + "` WHERE `player`=? AND `id`=?"
+            )) {
+                ps.setString(1, playerKey);
+                ps.setString(2, id);
+                try (ResultSet result = ps.executeQuery()) {
+                    while (result.next()) {
+                        String state = result.getString("state");
+                        if (state.isEmpty()) continue;
+                        char keyInDb = state.charAt(0);
+                        if (keys.contains(keyInDb)) {
+                            states.put(keyInDb, true);
+                        }
+                    }
+                    for (Character key : keys) {
+                        if (!states.containsKey(key)) {
+                            states.put(key, false);
+                        }
                     }
                 }
             }
@@ -53,13 +65,14 @@ public class RewardStateDatabase extends AbstractPluginHolder implements IDataba
         }
     }
 
-    public void markState(Player player, String key) {
+    public void markState(Player player, String id, char key) {
         try (Connection conn = plugin.getConnection();
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO `" + table + "`(`player`,`state`) VALUES(?,?);"
+                    "INSERT INTO `" + table + "`(`player`,`id`,`state`) VALUES(?,?,?);"
             )) {
             ps.setString(1, plugin.key(player));
-            ps.setString(2, key);
+            ps.setString(2, id);
+            ps.setString(3, String.valueOf(key));
             ps.execute();
         } catch (SQLException e) {
             warn(e);
