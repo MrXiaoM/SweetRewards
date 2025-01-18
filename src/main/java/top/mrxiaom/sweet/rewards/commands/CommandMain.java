@@ -77,7 +77,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         Pair.of("%added%", toAdd),
                         Pair.of("%points%", points == null ? -1L : points.longValue()));
         }
-        if (args.length == 4 && "get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
+        if (args.length >= 2 && "get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
             PointsDatabase db = plugin.getPointsDatabase();
             PointType type = db.get(args[1]);
             if (type == null) {
