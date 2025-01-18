@@ -117,6 +117,7 @@ public class Rewards extends AbstractPluginHolder {
                     item.setDurability(reward.data.shortValue());
                 }
             }
+            return item;
         }
         return null;
     }
