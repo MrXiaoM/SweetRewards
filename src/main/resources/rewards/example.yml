@@ -18,6 +18,8 @@ default-operations:
     - '&a&l你已经领取过该奖励了'
 # 累计奖励列表以及图标配置
 rewards:
+  # 奖励ID，也是界面布局图标ID
+  # 确定了之后就不要更改
   一:
     # 要求哪种点数
     type: default
@@ -36,6 +38,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
+      - '  &f当前点数: &e%sweetrewards_points_default%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e100金币'
       - ''
@@ -64,6 +67,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
+      - '  &f当前点数: &e%sweetrewards_points_default%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e500金币'
       - ''
@@ -79,6 +83,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
+      - '  &f当前点数: &e%sweetrewards_points_default%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e1000金币'
       - ''
@@ -94,6 +99,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
+      - '  &f当前点数: &e%sweetrewards_points_default%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e2000金币'
       - ''
@@ -109,6 +115,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
+      - '  &f当前点数: &e%sweetrewards_points_default%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e3000金币'
       - ''
