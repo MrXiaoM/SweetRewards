@@ -164,13 +164,13 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         }
         if (args.length == 2) {
             if ("set".equalsIgnoreCase(args[0]) && sender.isOp()) {
-                return startsWith(RewardsManager.inst().keys(), args[1]);
+                return startsWith(plugin.getPointsDatabase().keys(), args[1]);
             }
             if ("add".equalsIgnoreCase(args[0]) && sender.isOp()) {
-                return startsWith(RewardsManager.inst().keys(), args[1]);
+                return startsWith(plugin.getPointsDatabase().keys(), args[1]);
             }
             if ("get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
-                return startsWith(RewardsManager.inst().keys(sender), args[1]);
+                return startsWith(plugin.getPointsDatabase().keys(), args[1]);
             }
             if ("open".equalsIgnoreCase(args[0])) {
                 return startsWith(RewardsManager.inst().keys(sender), args[1]);

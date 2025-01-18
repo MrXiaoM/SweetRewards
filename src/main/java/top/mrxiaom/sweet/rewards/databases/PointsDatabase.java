@@ -27,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class PointsDatabase extends AbstractPluginHolder implements IDatabase, Listener {
@@ -70,6 +71,10 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
                 ps.execute();
             }
         }
+    }
+
+    public Set<String> keys() {
+        return pointTypeMap.keySet();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
