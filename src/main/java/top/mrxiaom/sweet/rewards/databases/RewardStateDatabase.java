@@ -1,6 +1,8 @@
 package top.mrxiaom.sweet.rewards.databases;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.func.AbstractPluginHolder;
@@ -73,6 +75,24 @@ public class RewardStateDatabase extends AbstractPluginHolder implements IDataba
             ps.setString(1, plugin.key(player));
             ps.setString(2, id);
             ps.setString(3, String.valueOf(key));
+            ps.execute();
+        } catch (SQLException e) {
+            warn(e);
+        }
+    }
+
+    public void resetStates(@Nullable OfflinePlayer player, String id) {
+        try (Connection conn = plugin.getConnection();
+            PreparedStatement ps = conn.prepareStatement(player == null
+                    ? ("DELETE FROM `" + table + "` WHERE `id`=?;")
+                    : ("DELETE FROM `" + table + "` WHERE `player`=? AND `id`=?;")
+            )) {
+            if (player == null) {
+                ps.setString(1, id);
+            } else {
+                ps.setString(1, plugin.key(player));
+                ps.setString(2, id);
+            }
             ps.execute();
         } catch (SQLException e) {
             warn(e);

@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.rewards.commands;
 
 import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
@@ -108,6 +110,31 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     Pair.of("%id%", type.id),
                     Pair.of("%points%", points));
         }
+        if (args.length == 4 && "reset".equalsIgnoreCase(args[0]) && sender.isOp()) {
+            RewardsManager manager = RewardsManager.inst();
+            Rewards rewards = manager.get(args[1]);
+            if (rewards == null) {
+                return Messages.commands__reset__not_found.tm(sender);
+            }
+            if (args[2].equals("--all")) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    closeInventoryByReset(player, rewards);
+                }
+                plugin.getRewardStateDatabase().resetStates(null, rewards.id);
+                return Messages.commands__reset__success_all.tm(sender,
+                        Pair.of("%rewards%", rewards.id));
+            } else {
+                OfflinePlayer target = Util.getOfflinePlayer(args[2]).orElse(null);
+                if (target == null) {
+                    return Messages.player__not_found.tm(sender);
+                }
+                closeInventoryByReset(target, rewards);
+                plugin.getRewardStateDatabase().resetStates(target, rewards.id);
+                return Messages.commands__reset__success.tm(sender,
+                        Pair.of("%player%", target.getName()),
+                        Pair.of("%rewards%", rewards.id));
+            }
+        }
         if (args.length >= 2 && "open".equalsIgnoreCase(args[0])) {
             RewardsManager manager = RewardsManager.inst();
             Rewards rewards = manager.get(args[1]);
@@ -142,9 +169,27 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 return Messages.commands__reload_database.tm(sender);
             }
             plugin.reloadConfig();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+                if (holder instanceof Rewards.Gui) {
+                    player.closeInventory();
+                    Messages.commands__reload_player_close_inv.tm(player);
+                }
+            }
             return Messages.commands__reload.tm(sender);
         }
         return (sender.isOp() ? Messages.commands__help__admin : Messages.commands__help__normal).tm(sender);
+    }
+
+    private void closeInventoryByReset(OfflinePlayer target, Rewards rewards) {
+        Player player = target.getPlayer();
+        if (player != null && player.isOnline()) {
+            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+            if (holder instanceof Rewards.Gui && ((Rewards.Gui) holder).isSameRewards(rewards)) {
+                player.closeInventory();
+                Messages.commands__reset__player_close_inv.tm(player);
+            }
+        }
     }
 
     private static final List<String> emptyList = Lists.newArrayList();
@@ -172,6 +217,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if ("get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
                 return startsWith(plugin.getPointsDatabase().keys(), args[1]);
             }
+            if ("reset".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                return startsWith(RewardsManager.inst().keys(), args[1]);
+            }
             if ("open".equalsIgnoreCase(args[0])) {
                 return startsWith(RewardsManager.inst().keys(sender), args[1]);
             }
@@ -188,6 +236,14 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             if ("get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get.other")) {
                 return null;
+            }
+            if ("reset".equalsIgnoreCase(args[0]) && sender.isOp()) {
+                List<String> list = new ArrayList<>();
+                list.add("--all");
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    list.add(player.getName());
+                }
+                return list;
             }
             if ("open".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.open-other")) {
                 return null;

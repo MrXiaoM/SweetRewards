@@ -9,8 +9,10 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
@@ -129,8 +131,9 @@ public class Rewards extends AbstractPluginHolder {
         return new Gui(player, states);
     }
 
-    public class Gui implements IGui {
+    public class Gui implements IGui, InventoryHolder {
         private Player player;
+        private Inventory created;
         private Map<Character, Boolean> states;
         private Gui(Player player, Map<Character, Boolean> states) {
             this.player = player;
@@ -141,9 +144,19 @@ public class Rewards extends AbstractPluginHolder {
             return states.getOrDefault(reward.id, false);
         }
 
+        public boolean isSameRewards(Rewards other) {
+            return id.equals(other.id);
+        }
+
         @Override
         public Player getPlayer() {
             return player;
+        }
+
+        @NotNull
+        @Override
+        public Inventory getInventory() {
+            return created;
         }
 
         public void updateInventory(BiConsumer<Integer, ItemStack> setItem) {
@@ -178,9 +191,9 @@ public class Rewards extends AbstractPluginHolder {
 
         @Override
         public Inventory newInventory() {
-            Inventory inv = Bukkit.createInventory(null, inventory.length, PAPI.setPlaceholders(player, title));
-            updateInventory(inv);
-            return inv;
+            created = Bukkit.createInventory(this, inventory.length, PAPI.setPlaceholders(player, title));
+            updateInventory(created);
+            return created;
         }
 
         @Override
