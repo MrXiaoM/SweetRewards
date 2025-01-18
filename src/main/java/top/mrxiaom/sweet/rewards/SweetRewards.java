@@ -1,5 +1,6 @@
 package top.mrxiaom.sweet.rewards;
 
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.OfflinePlayer;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
@@ -31,6 +32,14 @@ public class SweetRewards extends BukkitPlugin {
 
     public RewardStateDatabase getRewardStateDatabase() {
         return rewardStateDatabase;
+    }
+
+    @Override
+    protected void beforeLoad() {
+        MinecraftVersion.replaceLogger(getLogger());
+        MinecraftVersion.disableUpdateCheck();
+        MinecraftVersion.disableBStats();
+        MinecraftVersion.getVersion();
     }
 
     @Override
