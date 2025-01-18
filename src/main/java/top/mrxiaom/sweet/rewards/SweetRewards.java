@@ -16,7 +16,7 @@ public class SweetRewards extends BukkitPlugin {
     public SweetRewards() {
         super(options()
                 .bungee(true)
-                .adventure(false)
+                .adventure(true)
                 .database(true)
                 .reconnectDatabaseWhenReloadConfig(false)
                 .vaultEconomy(false)
