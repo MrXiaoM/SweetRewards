@@ -20,7 +20,7 @@ Minecraft 累计点数奖励插件。
 | `/rewards get <点数类型>`           | 查看自己的点数数量                | `sweet.rewards.get`        |
 | `/rewards get <点数类型> <玩家>`      | 查看某人的点数数量                | `sweet.rewards.get.other`  |
 | `/rewards set <点数类型> <玩家> <点数>` | 设置玩家的点数                  | OP/控制台                     |
-| `/rewards add <点数数量> <玩家> <点数>` | 增加玩家的点数                  | OP/控制台                     |
+| `/rewards add <点数类型> <玩家> <点数>` | 增加玩家的点数                  | OP/控制台                     |
 | `/rewards reset <菜单ID> <玩家>`    | 重置某人的奖励已领取情况             | OP/控制台                     |
 | `/rewards reset <菜单ID> --all`   | 重置所有玩家的奖励已领取情况           | OP/控制台                     |
 | `/rewards open <菜单ID>`          | 为自己打开菜单                  | 在菜单配置中设定                   |
