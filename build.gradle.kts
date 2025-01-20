@@ -28,7 +28,8 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation("de.tr7zw:item-nbt-api:2.14.1")
-    implementation("com.zaxxer:HikariCP:4.0.3") { isTransitive = false }
+    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("org.slf4j:slf4j-nop:2.0.16")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("net.kyori:adventure-api:4.17.0")
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
@@ -49,6 +50,7 @@ tasks {
             "org.jetbrains.annotations" to "annotations.jetbrains",
             "top.mrxiaom.pluginbase" to "base",
             "com.zaxxer.hikari" to "hikari",
+            "org.slf4j" to "slf4j",
             "de.tr7zw.changeme.nbtapi" to "nbtapi",
             "net.kyori" to "kyori",
         ).forEach { (original, target) ->
