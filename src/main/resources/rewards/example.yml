@@ -16,6 +16,17 @@ default-operations:
     - '&a左键&7 | &f领取奖励'
   already:
     - '&a&l你已经领取过该奖励了'
+# 如果不留空，则在 /rewards add 命令执行后，
+# 如果这个配置里有奖励可以领取，则提示可领取奖励。
+# 前提是玩家需要有这个配置里设置的权限。
+# 其中 %id% 会被替换为本菜单的 ID，%count% 会被替换成未领取奖励数量
+# 支持使用 PAPI 变量。跟 Lore 一样，列表中每个元素代表一行
+add-notice-message:
+  - "&7[ &e&l!&r &7] &a有 &e%count% 个累计奖励可领取！<click:run_command:/rewards open %id%><hover:show_text:'点击查看'>&e&n点击查看</hover></click>"
+# 进入游戏时，如果这个配置里有奖励可以领取，则提示可领取奖励
+# 同 add-notice-message
+join-notice-message: []
+
 # 累计奖励列表以及图标配置
 rewards:
   # 奖励ID，也是界面布局图标ID

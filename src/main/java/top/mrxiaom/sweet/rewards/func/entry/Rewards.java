@@ -18,6 +18,7 @@ import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.sweet.rewards.Messages;
@@ -39,6 +40,7 @@ public class Rewards extends AbstractPluginHolder {
     public final String title;
     public final char[] inventory;
     public final @Nullable String permission;
+    public final List<String> addNoticeMessage, joinNoticeMessage;
     public final Map<Character, Reward> rewards = new HashMap<>();
     public final Map<Character, LoadedIcon> otherIcons = new HashMap<>();
     public Rewards(SweetRewards plugin, MemorySection config, String id) {
@@ -52,6 +54,8 @@ public class Rewards extends AbstractPluginHolder {
         List<String> defOpNotReach = config.getStringList("default-operations.not-reach");
         List<String> defOpAvailable = config.getStringList("default-operations.available");
         List<String> defOpAlready = config.getStringList("default-operations.already");
+        this.addNoticeMessage = config.getStringList("add-notice-message");
+        this.joinNoticeMessage = config.getStringList("join-notice-message");
         section = config.getConfigurationSection("rewards");
         if (section != null) for (String key : section.getKeys(false)) {
             Reward reward = Reward.load(plugin, id, section, key, defOpNotReach, defOpAvailable, defOpAlready);
@@ -67,6 +71,35 @@ public class Rewards extends AbstractPluginHolder {
                 continue;
             }
             this.otherIcons.put(key.charAt(0), icon);
+        }
+    }
+
+    public void sendNoticeMessageOrNot(Player player, List<String> messages) {
+        if (messages.isEmpty()) return;
+        if (permission != null && !player.hasPermission(permission)) return;
+        List<Character> keys = new ArrayList<>(rewards.keySet());
+        PointsDatabase pdb = plugin.getPointsDatabase();
+        RewardStateDatabase db = plugin.getRewardStateDatabase();
+        Map<Character, Boolean> states = db.checkStates(player, id, keys);
+        keys.removeIf(it -> states.getOrDefault(it, false));
+        int count = 0;
+        for (Character key : keys) {
+            Reward reward = rewards.get(key);
+            if (reward == null) continue;
+            long point = pdb.getPoints(reward.type, player);
+            long require = reward.point;
+            if (point >= require) {
+                count++;
+            }
+        }
+        if (count > 0) {
+            Pair<String, Object>[] pairs = Pair.array(2);
+            pairs[0] = Pair.of("%id%", id);
+            pairs[1] = Pair.of("%count%", count);
+            for (String message : messages) {
+                String s = Pair.replace(message, pairs);
+                AdventureUtil.sendMessage(player, PAPI.setPlaceholders(player, s));
+            }
         }
     }
 

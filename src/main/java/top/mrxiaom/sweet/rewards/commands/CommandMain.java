@@ -72,12 +72,16 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 return Messages.commands__add__not_number.tm(sender);
             }
             Long points = db.addPoints(type, target, toAdd);
-            return (points == null ? Messages.commands__add__fail : Messages.commands__add__success).tm(sender,
+            (points == null ? Messages.commands__add__fail : Messages.commands__add__success).tm(sender,
                         Pair.of("%player%", target.getName()),
                         Pair.of("%display%", type.display),
                         Pair.of("%id%", type.id),
                         Pair.of("%added%", toAdd),
                         Pair.of("%points%", points == null ? -1L : points.longValue()));
+            for (Rewards rewards : RewardsManager.inst().rewards()) {
+                rewards.sendNoticeMessageOrNot(target, rewards.addNoticeMessage);
+            }
+            return true;
         }
         if (args.length >= 2 && "get".equalsIgnoreCase(args[0]) && sender.hasPermission("sweet.rewards.get")) {
             PointsDatabase db = plugin.getPointsDatabase();

@@ -2,6 +2,9 @@ package top.mrxiaom.sweet.rewards.func;
 
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
@@ -10,16 +13,14 @@ import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.func.entry.Rewards;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 @AutoRegister
 public class RewardsManager extends AbstractModule {
     final Map<String, Rewards> rewardsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public RewardsManager(SweetRewards plugin) {
         super(plugin);
+        registerEvents();
     }
 
     @Override
@@ -44,6 +45,14 @@ public class RewardsManager extends AbstractModule {
         }
     }
 
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        for (Rewards rewards : rewards()) {
+            rewards.sendNoticeMessageOrNot(player, rewards.joinNoticeMessage);
+        }
+    }
+
     public Set<String> keys() {
         return rewardsMap.keySet();
     }
@@ -57,6 +66,10 @@ public class RewardsManager extends AbstractModule {
             }
         }
         return set;
+    }
+
+    public Collection<Rewards> rewards() {
+        return Collections.unmodifiableCollection(rewardsMap.values());
     }
 
     @Nullable
