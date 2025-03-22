@@ -19,6 +19,7 @@ import top.mrxiaom.pluginbase.utils.Bytes;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.func.AbstractPluginHolder;
+import top.mrxiaom.sweet.rewards.func.RankManager;
 import top.mrxiaom.sweet.rewards.func.entry.PointType;
 
 import java.io.*;
@@ -26,9 +27,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public class PointsDatabase extends AbstractPluginHolder implements IDatabase, Listener {
     private final Map<String, PointType> pointTypeMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -75,6 +74,10 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
 
     public Set<String> keys() {
         return pointTypeMap.keySet();
+    }
+
+    public Collection<PointType> values() {
+        return pointTypeMap.values();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -207,6 +210,29 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
                 ps.setLong(2, point);
                 ps.execute();
             }
+        }
+    }
+
+    public List<RankManager.Rank> calculateRank(PointType type, int top) {
+        try (Connection conn = plugin.getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT * FROM `" + type.table + "` " +
+                             "ORDER BY `point` DESC " +
+                             "LIMIT " + top + ";");
+             ResultSet result = ps.executeQuery()) {
+            List<RankManager.Rank> list = new ArrayList<>();
+            while (result.next()) {
+                String uuid = result.getString("uuid");
+                String name = result.getString("player");
+                long point = result.getLong("point");
+                OfflinePlayer offline = plugin.key(name);
+                String offlineName = offline == null ? null : offline.getName();
+                list.add(new RankManager.Rank(offlineName == null ? name : offlineName, point));
+            }
+            return list;
+        } catch (SQLException e) {
+            warn(e);
+            return null;
         }
     }
 }

@@ -64,4 +64,8 @@ public class SweetRewards extends BukkitPlugin {
     public String key(OfflinePlayer player) {
         return player.getName(); // TODO
     }
+
+    public OfflinePlayer key(String key) {
+        return Util.getOfflinePlayer(key).orElse(null); // TODO
+    }
 }
