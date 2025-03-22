@@ -7,6 +7,7 @@ import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
 import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
+import top.mrxiaom.sweet.rewards.utils.FoliaScheduler;
 
 public class SweetRewards extends BukkitPlugin {
     public static SweetRewards getInstance() {
@@ -22,6 +23,7 @@ public class SweetRewards extends BukkitPlugin {
                 .vaultEconomy(false)
                 .scanIgnore("top.mrxiaom.sweet.rewards.libs")
         );
+        scheduler = new FoliaScheduler(this);
     }
     private PointsDatabase pointsDatabase;
     private RewardStateDatabase rewardStateDatabase;

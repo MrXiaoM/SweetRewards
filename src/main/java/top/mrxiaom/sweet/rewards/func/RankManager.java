@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
@@ -25,7 +26,7 @@ public class RankManager extends AbstractModule {
         }
     }
     int top;
-    BukkitTask task;
+    IRunTask task;
     Map<String, Map<Integer, Rank>> rankMap = new HashMap<>();
     public RankManager(SweetRewards plugin) {
         super(plugin);
@@ -41,7 +42,7 @@ public class RankManager extends AbstractModule {
         long refreshInterval = config.getLong("rank.refresh-interval", 60) * 20L;
         cancelTask();
         if (top > 0 && refreshInterval > 0) {
-            task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            task = plugin.getScheduler().runTaskTimerAsync(() -> {
                 for (Map<Integer, Rank> map : rankMap.values()) {
                     map.clear();
                 }

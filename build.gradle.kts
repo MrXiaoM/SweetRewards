@@ -34,6 +34,7 @@ dependencies {
     implementation("net.kyori:adventure-api:4.17.0")
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
+    implementation("com.github.technicallycoded:FoliaLib:0.4.3")
     implementation("top.mrxiaom:PluginBase:1.3.5")
 }
 java {
@@ -53,6 +54,7 @@ tasks {
             "org.slf4j" to "slf4j",
             "de.tr7zw.changeme.nbtapi" to "nbtapi",
             "net.kyori" to "kyori",
+            "com.tcoded.folialib" to "folialib",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
         }
