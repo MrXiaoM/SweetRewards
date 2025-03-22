@@ -29,3 +29,11 @@ Minecraft 累计点数奖励插件。
 | `/rewards reload`               | 重载配置文件                   | OP/控制台                     |
 
 由于本插件的定位并不是经济或者点券，故点数只增不减，不会设置需要额外做下界检查的 减少点数命令，也不会支持小数。
+
+## PAPI变量
+
+```
+%sweetrewards_points_点数类型% 获取玩家的点数数量
+%sweetrewards_rank_点数类型_第几名_name% 获取排行榜第几名的玩家名
+%sweetrewards_rank_点数类型_第几名_name% 获取排行榜第几名的点数数量
+```
