@@ -14,9 +14,9 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
-import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.gui.IGui;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
@@ -253,9 +253,9 @@ public class Rewards extends AbstractPluginHolder {
                     states.put(reward.id, true);
                     RewardStateDatabase db1 = plugin.getRewardStateDatabase();
                     db1.markState(player, id, reward.id);
-                    Pair<String, Object>[] pairs = Pair.array(2);
-                    pairs[0] = Pair.of("%point%", require);
-                    pairs[1] = Pair.of("%points%", point);
+                    List<Pair<String, Object>> pairs = new ArrayList<>();
+                    pairs.add(Pair.of("%point%", require));
+                    pairs.add(Pair.of("%points%", point));
                     for (IAction a : reward.rewards) {
                         a.run(player, pairs);
                     }

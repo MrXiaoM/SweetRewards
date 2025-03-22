@@ -2,15 +2,15 @@ package top.mrxiaom.sweet.rewards.func.entry;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
-import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.utils.Utils;
 
 import java.util.List;
 
-import static top.mrxiaom.pluginbase.func.AbstractGuiModule.loadActions;
+import static top.mrxiaom.pluginbase.actions.ActionProviders.loadActions;
 
 public class Reward {
     public final char id;
