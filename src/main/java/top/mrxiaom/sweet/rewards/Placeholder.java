@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.rewards;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,15 +41,7 @@ public class Placeholder extends PlaceholderExpansion {
     }
 
     @Override
-    public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
-        if (params.startsWith("points_")) {
-            String id = params.substring(7);
-            PointsDatabase db = plugin.getPointsDatabase();
-            PointType type = db.get(id);
-            if (type == null) return "TYPE_NOT_FOUND";
-            long point = db.getPoints(type, player);
-            return String.valueOf(point);
-        }
+    public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.startsWith("rank_")) {
             String[] split = params.substring(5).split("_", 4);
             if (split.length < 3) return "WRONG_USAGE";
@@ -76,6 +69,20 @@ public class Placeholder extends PlaceholderExpansion {
             }
             return "WRONG_USAGE";
         }
+        return super.onRequest(player, params);
+    }
+
+    @Override
+    public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
+        if (params.startsWith("points_")) {
+            String id = params.substring(7);
+            PointsDatabase db = plugin.getPointsDatabase();
+            PointType type = db.get(id);
+            if (type == null) return "TYPE_NOT_FOUND";
+            long point = db.getPoints(type, player);
+            return String.valueOf(point);
+        }
+
         return super.onPlaceholderRequest(player, params);
     }
 }
