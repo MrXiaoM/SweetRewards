@@ -114,7 +114,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     Pair.of("%id%", type.id),
                     Pair.of("%points%", points));
         }
-        if (args.length == 4 && "reset".equalsIgnoreCase(args[0]) && sender.isOp()) {
+        if (args.length == 3 && "reset".equalsIgnoreCase(args[0]) && sender.isOp()) {
             RewardsManager manager = RewardsManager.inst();
             Rewards rewards = manager.get(args[1]);
             if (rewards == null) {
