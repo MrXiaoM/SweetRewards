@@ -49,7 +49,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
-      - '  &f当前点数: &e%sweetrewards_points_default%'
+      - '  &f当前点数: &e%current%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e100金币'
       - ''
@@ -78,7 +78,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
-      - '  &f当前点数: &e%sweetrewards_points_default%'
+      - '  &f当前点数: &e%current%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e500金币'
       - ''
@@ -94,7 +94,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
-      - '  &f当前点数: &e%sweetrewards_points_default%'
+      - '  &f当前点数: &e%current%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e1000金币'
       - ''
@@ -110,7 +110,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
-      - '  &f当前点数: &e%sweetrewards_points_default%'
+      - '  &f当前点数: &e%current%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e2000金币'
       - ''
@@ -126,7 +126,7 @@ rewards:
     display: '&e&l累计奖励 x%point%'
     lore:
       - ''
-      - '  &f当前点数: &e%sweetrewards_points_default%'
+      - '  &f当前点数: &e%current%'
       - '  &f点数到达%point%时可领取'
       - '  &7- &e3000金币'
       - ''

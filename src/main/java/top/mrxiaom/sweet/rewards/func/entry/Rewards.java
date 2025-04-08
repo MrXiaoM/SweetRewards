@@ -115,13 +115,15 @@ public class Rewards extends AbstractPluginHolder {
             String sPoints = String.valueOf(point);
             ItemStack item = reward.icon.generateIcon(player,
                     name -> name.replace("%point%", sPoint)
-                            .replace("%points%", sPoints),
+                            .replace("%points%", sPoints)
+                            .replace("%current%", sPoints),
                     lore -> {
                         List<String> newLore = new ArrayList<>();
                         for (String s : lore) {
                             if (!s.equals("operation")) {
                                 newLore.add(s.replace("%point%", sPoint)
-                                        .replace("%points%", sPoints));
+                                        .replace("%points%", sPoints)
+                                        .replace("%current%", sPoints));
                                 continue;
                             }
                             List<String> operation = already
@@ -131,7 +133,8 @@ public class Rewards extends AbstractPluginHolder {
                                     : reward.opAvailable);
                             for (String line : operation) {
                                 newLore.add(line.replace("%point%", sPoint)
-                                        .replace("%points%", sPoints));
+                                        .replace("%points%", sPoints)
+                                        .replace("%current%", sPoints));
                             }
                         }
                         return newLore;
