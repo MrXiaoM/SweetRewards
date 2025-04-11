@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "top.mrxiaom.sweet.rewards"
-version = "1.0.0"
+version = "1.0.1"
 val targetJavaVersion = 8
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
 
@@ -35,7 +35,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
     implementation("com.github.technicallycoded:FoliaLib:0.4.3")
-    implementation("top.mrxiaom:PluginBase:1.3.5")
+    implementation("top.mrxiaom:PluginBase:1.3.6")
 }
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
