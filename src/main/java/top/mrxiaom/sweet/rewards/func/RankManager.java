@@ -51,6 +51,7 @@ public class RankManager extends AbstractModule {
                 for (PointType pointType : db.values()) {
                     Map<Integer, Rank> map = new HashMap<>();
                     List<Rank> ranks = db.calculateRank(pointType, top);
+                    if (ranks == null) continue;
                     for (int i = 0; i < ranks.size() && i < top; ) {
                         Rank rank = ranks.get(i++);
                         map.put(i, rank);
