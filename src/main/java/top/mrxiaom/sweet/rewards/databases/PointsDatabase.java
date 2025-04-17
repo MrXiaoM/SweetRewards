@@ -222,7 +222,6 @@ public class PointsDatabase extends AbstractPluginHolder implements IDatabase, L
              ResultSet result = ps.executeQuery()) {
             List<RankManager.Rank> list = new ArrayList<>();
             while (result.next()) {
-                String uuid = result.getString("uuid");
                 String name = result.getString("player");
                 long point = result.getLong("point");
                 OfflinePlayer offline = plugin.key(name);
