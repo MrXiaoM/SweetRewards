@@ -20,7 +20,6 @@ public class SweetRewards extends BukkitPlugin {
                 .adventure(true)
                 .database(true)
                 .reconnectDatabaseWhenReloadConfig(false)
-                .vaultEconomy(false)
                 .scanIgnore("top.mrxiaom.sweet.rewards.libs")
         );
         scheduler = new FoliaLibScheduler(this);
