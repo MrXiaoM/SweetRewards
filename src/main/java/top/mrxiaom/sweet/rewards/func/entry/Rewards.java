@@ -19,6 +19,7 @@ import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGui;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.ItemStackUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.sweet.rewards.Messages;
@@ -113,7 +114,19 @@ public class Rewards extends AbstractPluginHolder {
             boolean notReach = point < require;
             String sPoint = String.valueOf(require);
             String sPoints = String.valueOf(point);
-            ItemStack item = reward.icon.generateIcon(player,
+            ItemStack baseItem;
+            Integer customModelData;
+            if (already) {
+                baseItem = reward.materialAlready.getNewItem();
+                customModelData = reward.materialAlready.getCustomModelData();
+            } else if (notReach) {
+                baseItem = reward.materialNotReach.getNewItem();
+                customModelData = reward.materialNotReach.getCustomModelData();
+            } else {
+                baseItem = reward.material.getNewItem();
+                customModelData = reward.material.getCustomModelData();
+            }
+            ItemStack item = reward.icon.generateIcon(baseItem, player,
                     name -> name.replace("%point%", sPoint)
                             .replace("%points%", sPoints)
                             .replace("%current%", sPoints),
@@ -139,21 +152,8 @@ public class Rewards extends AbstractPluginHolder {
                         }
                         return newLore;
                     });
-            if (already) {
-                item.setType(reward.materialAlready);
-                if (reward.dataAlready != null) {
-                    item.setDurability(reward.dataAlready.shortValue());
-                }
-            } else if (notReach) {
-                item.setType(reward.materialNotReach);
-                if (reward.dataNotReach != null) {
-                    item.setDurability(reward.dataNotReach.shortValue());
-                }
-            } else {
-                item.setType(reward.material);
-                if (reward.data != null) {
-                    item.setDurability(reward.data.shortValue());
-                }
+            if (customModelData != null) {
+                ItemStackUtil.setCustomModelData(item, customModelData);
             }
             return item;
         }

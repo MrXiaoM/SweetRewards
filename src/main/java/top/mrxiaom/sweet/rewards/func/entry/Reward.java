@@ -1,6 +1,5 @@
 package top.mrxiaom.sweet.rewards.func.entry;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
@@ -18,14 +17,12 @@ public class Reward {
     public final PointType type;
     public final long point;
     public final Material material, materialNotReach, materialAlready;
-    public final Integer data, dataNotReach, dataAlready;
     public final LoadedIcon icon;
     public final List<String> opNotReach, opAvailable, opAlready;
     public final List<IAction> rewards;
 
     public Reward(char id, String key, PointType type, long point,
-                  Material material, Material materialNotReach, Material materialAlready,
-                  Integer data, Integer dataNotReach, Integer dataAlready, LoadedIcon icon,
+                  Material material, Material materialNotReach, Material materialAlready, LoadedIcon icon,
                   List<String> opNotReach, List<String> opAvailable, List<String> opAlready,
                   List<IAction> rewards
     ) {
@@ -36,9 +33,6 @@ public class Reward {
         this.material = material;
         this.materialNotReach = materialNotReach;
         this.materialAlready = materialAlready;
-        this.data = data;
-        this.dataNotReach = dataNotReach;
-        this.dataAlready = dataAlready;
         this.icon = icon;
         this.opNotReach = opNotReach;
         this.opAvailable = opAvailable;
@@ -65,9 +59,9 @@ public class Reward {
             plugin.warn("[rewards/" + parent + "] '" + id + "' 的需求点数应当大于0");
             return null;
         }
-        Pair<Material, Integer> material = Utils.parseMaterial(section, id + ".material", null);
-        Pair<Material, Integer> materialNotReach = Utils.parseMaterial(section, id + ".material-not-reach", material);
-        Pair<Material, Integer> materialAlready = Utils.parseMaterial(section, id + ".material-already", material);
+        Material material = Utils.parseMaterial(section, id + ".material", null);
+        Material materialNotReach = Utils.parseMaterial(section, id + ".material-not-reach", material);
+        Material materialAlready = Utils.parseMaterial(section, id + ".material-already", material);
         if (material == null || materialNotReach == null || materialAlready == null) {
             plugin.warn("[rewards/" + parent + "] '" + id + "' 的物品图标设置不正确");
             return null;
@@ -81,8 +75,7 @@ public class Reward {
             return null;
         }
         return new Reward(realId, parent + "." + id, type, point,
-                material.getKey(), materialNotReach.getKey(), materialAlready.getKey(),
-                material.getValue(), materialNotReach.getValue(), materialAlready.getValue(),
+                material, materialNotReach, materialAlready,
                 icon, opNotReach, opAvailable, opAlready, rewards);
     }
 

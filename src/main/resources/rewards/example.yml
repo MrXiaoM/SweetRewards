@@ -31,12 +31,13 @@ join-notice-message: []
 rewards:
   # 奖励ID，也是界面布局图标ID
   # 确定了之后就不要更改
+  # 在数据库中，会以 '菜单名.奖励ID' 的形式储存数据，如 'example.一'
   一:
     # 要求哪种点数
     type: default
     # 要求点数到达多少
     point: 10
-    # 可领取时的图标，可使用冒号添加子ID，如 'WOOL:3'
+    # 可领取时的图标，可使用冒号添加子ID，如 'WOOL:3'，可使用分号添加 CustomModelData，如 'RED_WOOL;10000'
     material: APPLE
     # 不可领取(未到达点数)时的图标
     material-not-reach: APPLE
