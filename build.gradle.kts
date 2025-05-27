@@ -32,7 +32,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.4.0")
     implementation("net.kyori:adventure-text-minimessage:4.21.0")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4")
-    implementation("top.mrxiaom:PluginBase:1.4.2")
+    implementation("top.mrxiaom:PluginBase:1.4.4")
 }
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
