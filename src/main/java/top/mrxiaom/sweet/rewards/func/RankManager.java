@@ -60,6 +60,7 @@ public class RankManager extends AbstractModule {
                     rankMap.put(pointType.id, map);
                 }
             }, refreshInterval, refreshInterval);
+            info("点数前 " + top + " 排行榜每隔 " + String.format("%.1f", refreshInterval / 20.0) + " 秒刷新");
         }
     }
 

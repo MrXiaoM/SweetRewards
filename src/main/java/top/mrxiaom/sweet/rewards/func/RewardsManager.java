@@ -14,6 +14,8 @@ import top.mrxiaom.sweet.rewards.func.entry.Rewards;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @AutoRegister
 public class RewardsManager extends AbstractModule {
@@ -26,6 +28,7 @@ public class RewardsManager extends AbstractModule {
     @Override
     public void reloadConfig(MemoryConfiguration config) {
         rewardsMap.clear();
+        AtomicInteger totalRewards = new AtomicInteger(0);
         for (String s : config.getStringList("rewards-folders")) {
             File folder = s.startsWith("./") ? new File(plugin.getDataFolder(), s.substring(2)) : new File(s);
             if (!folder.exists()) {
@@ -40,9 +43,12 @@ public class RewardsManager extends AbstractModule {
                     return;
                 }
                 YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-                rewardsMap.put(id, new Rewards(plugin, cfg, id));
+                Rewards rewards = new Rewards(plugin, cfg, id);
+                rewardsMap.put(id, rewards);
+                totalRewards.addAndGet(rewards.rewards.size());
             });
         }
+        info("加载了 " + rewardsMap.size() + " 个界面，共 " + totalRewards.get() + " 个累计点数奖励");
     }
 
     @EventHandler
