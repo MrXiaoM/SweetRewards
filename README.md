@@ -35,5 +35,5 @@ Minecraft 累计点数奖励插件。
 ```
 %sweetrewards_points_点数类型% 获取玩家的点数数量
 %sweetrewards_rank_点数类型_第几名_name% 获取排行榜第几名的玩家名
-%sweetrewards_rank_点数类型_第几名_name% 获取排行榜第几名的点数数量
+%sweetrewards_rank_点数类型_第几名_points% 获取排行榜第几名的点数数量
 ```
