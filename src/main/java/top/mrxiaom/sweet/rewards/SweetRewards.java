@@ -1,13 +1,17 @@
 package top.mrxiaom.sweet.rewards;
 
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
 import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
+
+import java.util.UUID;
 
 public class SweetRewards extends BukkitPlugin {
     public static SweetRewards getInstance() {
@@ -26,6 +30,7 @@ public class SweetRewards extends BukkitPlugin {
     }
     private PointsDatabase pointsDatabase;
     private RewardStateDatabase rewardStateDatabase;
+    private boolean onlineMode;
 
     public PointsDatabase getPointsDatabase() {
         return pointsDatabase;
@@ -62,11 +67,35 @@ public class SweetRewards extends BukkitPlugin {
         getLogger().info("SweetRewards 加载完毕");
     }
 
+    @Override
+    protected void beforeReloadConfig(FileConfiguration config) {
+        String online = config.getString("online-mode", "auto").toLowerCase();
+        switch (online) {
+            case "true":
+                onlineMode = true;
+                break;
+            case "false":
+                onlineMode = false;
+                break;
+            case "auto":
+            default:
+                onlineMode = Bukkit.getOnlineMode();
+                break;
+        }
+    }
+
     public String key(OfflinePlayer player) {
-        return player.getName(); // TODO
+        if (player == null) return null;
+        return onlineMode
+                ? player.getUniqueId().toString()
+                : player.getName();
     }
 
     public OfflinePlayer key(String key) {
-        return Util.getOfflinePlayer(key).orElse(null); // TODO
+        if (onlineMode) {
+            return Util.getOfflinePlayer(UUID.fromString(key)).orElse(null);
+        } else {
+            return Util.getOfflinePlayer(key).orElse(null);
+        }
     }
 }
