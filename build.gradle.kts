@@ -24,7 +24,7 @@ dependencies {
 
     compileOnly("me.clip:placeholderapi:2.11.6")
 
-    implementation("de.tr7zw:item-nbt-api:2.15.1-SNAPSHOT")
+    implementation("de.tr7zw:item-nbt-api:2.15.1")
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("org.slf4j:slf4j-nop:2.0.16")
     implementation("org.jetbrains:annotations:24.0.0")
@@ -32,7 +32,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.4.0")
     implementation("net.kyori:adventure-text-minimessage:4.22.0")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4")
-    implementation("top.mrxiaom:PluginBase:1.4.9")
+    implementation("top.mrxiaom:PluginBase:1.5.1")
 }
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
