@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
-import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.gui.IGuiHolder;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.ItemStackUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
@@ -167,7 +167,7 @@ public class Rewards extends AbstractPluginHolder {
         return new Gui(player, states);
     }
 
-    public class Gui implements IGui, InventoryHolder {
+    public class Gui implements IGuiHolder {
         private Player player;
         private Inventory created;
         private Map<Character, Boolean> states;
