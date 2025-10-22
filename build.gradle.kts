@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "top.mrxiaom.sweet.rewards"
-version = "1.0.5"
+version = "1.0.6"
 val targetJavaVersion = 8
 val pluginBaseVersion = "1.6.6"
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
