@@ -6,13 +6,13 @@ plugins {
 }
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.6.7")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.0")
 }
 
 group = "top.mrxiaom.sweet.rewards"
 version = "1.0.6"
 val targetJavaVersion = 8
-val pluginBaseVersion = "1.6.7"
+val pluginBaseVersion = "1.7.0"
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
 
 repositories {
@@ -39,8 +39,9 @@ dependencies {
 
     implementation("de.tr7zw:item-nbt-api:2.15.3")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
-    implementation("top.mrxiaom.pluginbase:library:$pluginBaseVersion")
-    implementation("top.mrxiaom.pluginbase:paper:$pluginBaseVersion")
+    listOf(
+        "library", "paper", "l10n", "actions", "gui", "misc"
+    ).forEach { implementation("top.mrxiaom.pluginbase:$it:${pluginBaseVersion}") }
     implementation("top.mrxiaom:LibrariesResolver-Lite:$pluginBaseVersion")
 }
 buildConfig {

@@ -20,6 +20,7 @@ import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
 import top.mrxiaom.pluginbase.utils.*;
+import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.sweet.rewards.Messages;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
