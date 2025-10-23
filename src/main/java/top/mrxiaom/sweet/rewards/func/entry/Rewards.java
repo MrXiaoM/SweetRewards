@@ -14,14 +14,12 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.actions.ActionProviders;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
-import top.mrxiaom.pluginbase.utils.AdventureUtil;
-import top.mrxiaom.pluginbase.utils.ItemStackUtil;
-import top.mrxiaom.pluginbase.utils.PAPI;
-import top.mrxiaom.pluginbase.utils.Pair;
+import top.mrxiaom.pluginbase.utils.*;
 import top.mrxiaom.sweet.rewards.Messages;
 import top.mrxiaom.sweet.rewards.SweetRewards;
 import top.mrxiaom.sweet.rewards.databases.PointsDatabase;
@@ -256,12 +254,10 @@ public class Rewards extends AbstractPluginHolder {
                     states.put(reward.id, true);
                     RewardStateDatabase db1 = plugin.getRewardStateDatabase();
                     db1.markState(player, id, reward.id);
-                    List<Pair<String, Object>> pairs = new ArrayList<>();
-                    pairs.add(Pair.of("%point%", require));
-                    pairs.add(Pair.of("%points%", point));
-                    for (IAction a : reward.rewards) {
-                        a.run(player, pairs);
-                    }
+                    ListPair<String, Object> r = new ListPair<>();
+                    r.add(Pair.of("%point%", require));
+                    r.add(Pair.of("%points%", point));
+                    plugin.getScheduler().runTask(() -> ActionProviders.run(plugin, player, reward.rewards, r));
                     updateInventory(view);
                     return;
                 }
