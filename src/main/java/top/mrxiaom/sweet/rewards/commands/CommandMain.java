@@ -191,10 +191,13 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     private void closeInventoryByReset(OfflinePlayer target, Rewards rewards) {
         Player player = target.getPlayer();
         if (player != null && player.isOnline()) {
-            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-            if (holder instanceof Rewards.Gui && ((Rewards.Gui) holder).isSameRewards(rewards)) {
-                player.closeInventory();
-                Messages.commands__reset__player_close_inv.tm(player);
+            try {
+                InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+                if (holder instanceof Rewards.Gui && ((Rewards.Gui) holder).isSameRewards(rewards)) {
+                    player.closeInventory();
+                    Messages.commands__reset__player_close_inv.tm(player);
+                }
+            } catch (IllegalStateException ignored) { // fuck folia
             }
         }
     }
