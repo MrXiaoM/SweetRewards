@@ -174,10 +174,13 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             plugin.reloadConfig();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-                if (holder instanceof Rewards.Gui) {
-                    player.closeInventory();
-                    Messages.commands__reload_player_close_inv.tm(player);
+                try {
+                    InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+                    if (holder instanceof Rewards.Gui) {
+                        player.closeInventory();
+                        Messages.commands__reload_player_close_inv.tm(player);
+                    }
+                } catch (IllegalStateException ignored) { // fuck folia
                 }
             }
             return Messages.commands__reload.tm(sender);
