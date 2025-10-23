@@ -42,7 +42,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (type == null) {
                 return Messages.commands__set__not_found.tm(sender);
             }
-            Player target = Util.getOnlinePlayer(args[2]).orElse(null);
+            OfflinePlayer target = Util.getOfflinePlayer(args[2]).orElse(null);
             if (target == null) {
                 return Messages.player__not_found.tm(sender);
             }
@@ -63,7 +63,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (type == null) {
                 return Messages.commands__add__not_found.tm(sender);
             }
-            Player target = Util.getOnlinePlayer(args[2]).orElse(null);
+            OfflinePlayer target = Util.getOfflinePlayer(args[2]).orElse(null);
             if (target == null) {
                 return Messages.player__not_found.tm(sender);
             }
@@ -78,8 +78,10 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         Pair.of("%id%", type.id),
                         Pair.of("%added%", toAdd),
                         Pair.of("%points%", points == null ? -1L : points.longValue()));
-            for (Rewards rewards : RewardsManager.inst().rewards()) {
-                rewards.sendNoticeMessageOrNot(target, rewards.addNoticeMessage);
+            if (target.getPlayer() != null) {
+                for (Rewards rewards : RewardsManager.inst().rewards()) {
+                    rewards.sendNoticeMessageOrNot(target.getPlayer(), rewards.addNoticeMessage);
+                }
             }
             return true;
         }
