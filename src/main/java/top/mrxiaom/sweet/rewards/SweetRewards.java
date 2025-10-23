@@ -19,7 +19,6 @@ import top.mrxiaom.sweet.rewards.databases.RewardStateDatabase;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,20 +43,13 @@ public class SweetRewards extends BukkitPlugin {
                 : new File(this.getDataFolder(), "libraries");
         DefaultLibraryResolver resolver = new DefaultLibraryResolver(getLogger(), librariesDir);
 
-        resolver.addLibrary(BuildConstants.LIBRARIES);
+        resolver.addResolvedLibrary(BuildConstants.RESOLVED_LIBRARIES);
 
         List<URL> libraries = resolver.doResolve();
         info("正在添加 " + libraries.size() + " 个依赖库到类加载器");
         for (URL library : libraries) {
             this.classLoader.addURL(library);
         }
-    }
-
-    @Override
-    protected @NotNull ClassLoaderWrapper initClassLoader(URLClassLoader classLoader) {
-        return ClassLoaderWrapper.isSupportLibraryLoader
-                ? new ClassLoaderWrapper(ClassLoaderWrapper.findLibraryLoader(classLoader))
-                : new ClassLoaderWrapper(classLoader);
     }
 
     @Override
