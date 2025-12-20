@@ -170,6 +170,7 @@ public class Rewards extends AbstractPluginHolder {
         private Player player;
         private Inventory created;
         private Map<Character, Boolean> states;
+        private boolean actionLock = false;
         private Gui(Player player, Map<Character, Boolean> states) {
             this.player = player;
             this.states = states;
@@ -237,34 +238,45 @@ public class Rewards extends AbstractPluginHolder {
                             InventoryView view, InventoryClickEvent event
         ) {
             event.setCancelled(true);
+            if (actionLock) return;
             Character clickId = getClickedId(slot);
             if (clickId != null) {
+                actionLock = true;
                 Reward reward = rewards.get(clickId);
-                if (reward != null && click.equals(ClickType.LEFT)) {
-                    PointsDatabase db = plugin.getPointsDatabase();
-                    long point = db.getPoints(reward.type, player);
-                    long require = reward.point;
-                    if (hasUsed(reward)) {
-                        Messages.gui__reward__already.tm(player);
+                if (reward != null) {
+                    if (click.equals(ClickType.LEFT)) {
+                        PointsDatabase db = plugin.getPointsDatabase();
+                        long point = db.getPoints(reward.type, player);
+                        long require = reward.point;
+                        if (hasUsed(reward)) {
+                            Messages.gui__reward__already.tm(player);
+                            return;
+                        }
+                        if (point < require) {
+                            Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
+                            return;
+                        }
+                        states.put(reward.id, true);
+                        RewardStateDatabase db1 = plugin.getRewardStateDatabase();
+                        db1.markState(player, id, reward.id);
+                        ListPair<String, Object> r = new ListPair<>();
+                        r.add(Pair.of("%point%", require));
+                        r.add(Pair.of("%points%", point));
+                        plugin.getScheduler().runTask(() -> ActionProviders.run(plugin, player, reward.rewards, r));
+                        updateInventory(view);
+                        actionLock = false;
                         return;
                     }
-                    if (point < require) {
-                        Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
-                        return;
-                    }
-                    states.put(reward.id, true);
-                    RewardStateDatabase db1 = plugin.getRewardStateDatabase();
-                    db1.markState(player, id, reward.id);
-                    ListPair<String, Object> r = new ListPair<>();
-                    r.add(Pair.of("%point%", require));
-                    r.add(Pair.of("%points%", point));
-                    plugin.getScheduler().runTask(() -> ActionProviders.run(plugin, player, reward.rewards, r));
-                    updateInventory(view);
-                    return;
+                    actionLock = false;
                 }
                 LoadedIcon icon = otherIcons.get(clickId);
                 if (icon != null) {
-                    icon.click(player, click);
+                    plugin.getScheduler().runTask(() -> {
+                        icon.click(player, click);
+                        actionLock = false;
+                    });
+                } else {
+                    actionLock = false;
                 }
             }
         }
