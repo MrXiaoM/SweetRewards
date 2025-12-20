@@ -5,14 +5,15 @@ plugins {
     id ("com.github.gmazzo.buildconfig") version "5.6.7"
 }
 buildscript {
-    repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.0")
+    repositories.mavenLocal()
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.1")
 }
+val base = top.mrxiaom.gradle.LibraryHelper(project)
 
 group = "top.mrxiaom.sweet.rewards"
 version = "1.0.6"
 val targetJavaVersion = 8
-val pluginBaseVersion = "1.7.0"
+val pluginBaseModules = base.modules.run { listOf(library, paper, l10n, actions, gui, misc) }
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
 
 repositories {
@@ -24,7 +25,6 @@ repositories {
     maven("https://repo.rosewooddev.io/repository/public/")
 }
 
-val base = top.mrxiaom.gradle.LibraryHelper(project)
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     // compileOnly("org.spigotmc:spigot:1.20") // NMS
@@ -39,10 +39,11 @@ dependencies {
 
     implementation("de.tr7zw:item-nbt-api:2.15.5")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
-    listOf(
-        "library", "paper", "l10n", "actions", "gui", "misc"
-    ).forEach { implementation("top.mrxiaom.pluginbase:$it:${pluginBaseVersion}") }
-    implementation("top.mrxiaom:LibrariesResolver-Lite:$pluginBaseVersion")
+
+    for (artifact in pluginBaseModules) {
+        implementation(artifact)
+    }
+    implementation(base.resolver.lite)
 }
 buildConfig {
     className("BuildConstants")
@@ -80,6 +81,7 @@ tasks {
     }
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
+        options.compilerArgs.add("-Xlint:-options")
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
             options.release.set(targetJavaVersion)
         }
