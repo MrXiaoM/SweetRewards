@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -176,13 +177,27 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             plugin.reloadConfig();
             for (Player player : Bukkit.getOnlinePlayers()) {
+                Inventory inv = player.getOpenInventory().getTopInventory();
+                boolean close = false;
                 try {
-                    InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
-                    if (holder instanceof Rewards.Gui) {
-                        player.closeInventory();
-                        Messages.commands__reload_player_close_inv.tm(player);
+                    close = inv.getLocation() == null;
+                } catch (Throwable ignored) {
+                    close = true;
+                }
+                if (close) {
+                    try {
+                        InventoryHolder holder = inv.getHolder();
+                        if (holder instanceof Rewards.Gui) {
+                            close = true;
+                        } else {
+                            close = false;
+                        }
+                    } catch (IllegalStateException ignored) { // fuck folia
                     }
-                } catch (IllegalStateException ignored) { // fuck folia
+                }
+                if (close) {
+                    player.closeInventory();
+                    Messages.commands__reload_player_close_inv.tm(player);
                 }
             }
             return Messages.commands__reload.tm(sender);
