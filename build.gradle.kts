@@ -5,8 +5,8 @@ plugins {
     id ("com.github.gmazzo.buildconfig") version "5.6.7"
 }
 buildscript {
-    repositories.mavenLocal()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.4")
+    repositories.mavenCentral()
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.5")
 }
 val base = top.mrxiaom.gradle.LibraryHelper(project)
 
