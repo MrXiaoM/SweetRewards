@@ -244,32 +244,8 @@ public class Rewards extends AbstractPluginHolder {
                 actionLock = true;
                 Reward reward = rewards.get(clickId);
                 if (reward != null) {
-                    if (click.equals(ClickType.LEFT)) {
-                        PointsDatabase db = plugin.getPointsDatabase();
-                        long point = db.getPoints(reward.type, player);
-                        long require = reward.point;
-                        if (hasUsed(reward)) {
-                            Messages.gui__reward__already.tm(player);
-                            actionLock = false;
-                            return;
-                        }
-                        if (point < require) {
-                            Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
-                            actionLock = false;
-                            return;
-                        }
-                        states.put(reward.id, true);
-                        RewardStateDatabase db1 = plugin.getRewardStateDatabase();
-                        db1.markState(player, id, reward.id);
-                        ListPair<String, Object> r = new ListPair<>();
-                        r.add(Pair.of("%point%", require));
-                        r.add(Pair.of("%points%", point));
-                        plugin.getScheduler().runTask(() -> ActionProviders.run(plugin, player, reward.rewards, r));
-                        updateInventory(view);
-                        actionLock = false;
-                        return;
-                    }
-                    actionLock = false;
+                    onClickReward(reward, click);
+                    return;
                 }
                 LoadedIcon icon = otherIcons.get(clickId);
                 if (icon != null) {
@@ -281,6 +257,39 @@ public class Rewards extends AbstractPluginHolder {
                     actionLock = false;
                 }
             }
+        }
+
+        private void onClickReward(Reward reward, ClickType click) {
+            if (click.equals(ClickType.LEFT)) {
+                plugin.getScheduler().runTaskAsync(() -> {
+                    PointsDatabase db = plugin.getPointsDatabase();
+                    long point = db.getPoints(reward.type, player);
+                    long require = reward.point;
+                    if (hasUsed(reward)) {
+                        Messages.gui__reward__already.tm(player);
+                        actionLock = false;
+                        return;
+                    }
+                    if (point < require) {
+                        Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
+                        actionLock = false;
+                        return;
+                    }
+                    states.put(reward.id, true);
+                    RewardStateDatabase db1 = plugin.getRewardStateDatabase();
+                    db1.markState(player, id, reward.id);
+                    ListPair<String, Object> r = new ListPair<>();
+                    r.add(Pair.of("%point%", require));
+                    r.add(Pair.of("%points%", point));
+                    plugin.getScheduler().runTask(() -> {
+                        ActionProviders.run(plugin, player, reward.rewards, r);
+                        updateInventory(created);
+                        actionLock = false;
+                    });
+                });
+                return;
+            }
+            actionLock = false;
         }
 
         public Character getClickedId(int slot) {
