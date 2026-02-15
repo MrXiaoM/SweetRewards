@@ -250,10 +250,12 @@ public class Rewards extends AbstractPluginHolder {
                         long require = reward.point;
                         if (hasUsed(reward)) {
                             Messages.gui__reward__already.tm(player);
+                            actionLock = false;
                             return;
                         }
                         if (point < require) {
                             Messages.gui__reward__not_reach.tm(player, Pair.of("%type%", reward.type.display));
+                            actionLock = false;
                             return;
                         }
                         states.put(reward.id, true);
