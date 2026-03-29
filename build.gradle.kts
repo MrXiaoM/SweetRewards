@@ -1,12 +1,12 @@
 plugins {
     java
     `maven-publish`
-    id ("com.gradleup.shadow") version "8.3.0"
+    id ("com.gradleup.shadow") version "9.3.0"
     id ("com.github.gmazzo.buildconfig") version "5.6.7"
 }
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.7")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.13")
 }
 val base = top.mrxiaom.gradle.LibraryHelper(project)
 
@@ -37,7 +37,7 @@ dependencies {
     base.library("net.kyori:adventure-platform-bukkit:4.4.0")
     base.library("net.kyori:adventure-text-minimessage:4.22.0")
 
-    implementation("de.tr7zw:item-nbt-api:2.15.5")
+    implementation("de.tr7zw:item-nbt-api:2.15.6")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
 
     for (artifact in pluginBaseModules) {
@@ -55,6 +55,7 @@ buildConfig {
     buildConfigField("String[]", "RESOLVED_LIBRARIES", base.join())
 }
 java {
+    disableAutoTargetJvm()
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
@@ -64,6 +65,7 @@ java {
 }
 tasks {
     shadowJar {
+        configurations.add(project.configurations.runtimeClasspath.get())
         mapOf(
             "top.mrxiaom.pluginbase" to "base",
             "de.tr7zw.changeme.nbtapi" to "nbtapi",
@@ -100,7 +102,10 @@ tasks {
     processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         from(sourceSets.main.get().resources.srcDirs) {
-            expand(mapOf("version" to version))
+            expand(mapOf(
+                "version" to version,
+                "libraries" to base.addedLibraries.joinToString("\"\n  - \""),
+            ))
             include("plugin.yml")
         }
     }
