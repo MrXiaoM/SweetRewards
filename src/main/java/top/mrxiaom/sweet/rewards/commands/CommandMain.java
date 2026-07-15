@@ -178,25 +178,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             plugin.reloadConfig();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Inventory inv = player.getOpenInventory().getTopInventory();
-                boolean close = false;
-                try {
-                    close = inv.getLocation() == null;
-                } catch (Throwable ignored) {
-                    close = true;
-                }
-                if (close) {
-                    try {
-                        InventoryHolder holder = inv.getHolder();
-                        if (holder instanceof Rewards.Gui) {
-                            close = true;
-                        } else {
-                            close = false;
-                        }
-                    } catch (IllegalStateException ignored) { // fuck folia
-                    }
-                }
-                if (close) {
-                    player.closeInventory();
+                InventoryHolder holder = Util.getHolder(inv);
+                if (holder instanceof Rewards.Gui) {
+                    plugin.getScheduler().closeInventory(player);
                     Messages.commands__reload_player_close_inv.tm(player);
                 }
             }
@@ -211,7 +195,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             try {
                 InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
                 if (holder instanceof Rewards.Gui && ((Rewards.Gui) holder).isSameRewards(rewards)) {
-                    player.closeInventory();
+                    plugin.getScheduler().closeInventory(player);
                     Messages.commands__reset__player_close_inv.tm(player);
                 }
             } catch (IllegalStateException ignored) { // fuck folia
