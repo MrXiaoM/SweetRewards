@@ -10,12 +10,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.actions.ActionProviders;
 import top.mrxiaom.pluginbase.api.IAction;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 import top.mrxiaom.pluginbase.func.AbstractGuiModule;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
@@ -220,7 +220,7 @@ public class Rewards extends AbstractPluginHolder {
             updateInventory(inv::setItem);
         }
 
-        public void updateInventory(InventoryView view) {
+        public void updateInventory(InventoryViewAccessor view) {
             updateInventory(view::setItem);
             player.updateInventory();
         }
@@ -235,7 +235,7 @@ public class Rewards extends AbstractPluginHolder {
         @Override
         public void onClick(InventoryAction action, ClickType click, InventoryType.SlotType slotType,
                             int slot, ItemStack currentItem, ItemStack cursor,
-                            InventoryView view, InventoryClickEvent event
+                            InventoryViewAccessor view, InventoryClickEvent event
         ) {
             event.setCancelled(true);
             if (actionLock) return;
