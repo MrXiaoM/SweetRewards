@@ -177,7 +177,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             plugin.reloadConfig();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Inventory inv = player.getOpenInventory().getTopInventory();
+                Inventory inv = Util.getOpenInventory(player).getTopInventory();
                 InventoryHolder holder = Util.getHolder(inv);
                 if (holder instanceof Rewards.Gui) {
                     plugin.getScheduler().closeInventory(player);
@@ -193,7 +193,8 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         Player player = target.getPlayer();
         if (player != null && player.isOnline()) {
             try {
-                InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder();
+                Inventory inventory = Util.getOpenInventory(player).getTopInventory();
+                InventoryHolder holder = Util.getHolder(inventory);
                 if (holder instanceof Rewards.Gui && ((Rewards.Gui) holder).isSameRewards(rewards)) {
                     plugin.getScheduler().closeInventory(player);
                     Messages.commands__reset__player_close_inv.tm(player);
