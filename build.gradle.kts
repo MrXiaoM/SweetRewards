@@ -12,8 +12,9 @@ buildscript {
 }
 val base = LibraryHelper(project)
 
-group = "top.mrxiaom.sweet.rewards"
-version = "1.0.9"
+println("Group:   ${rootProject.group}")
+println("Version: ${rootProject.version}")
+
 val targetJavaVersion = 8
 val pluginBaseModules = base.modules.run { listOf(library, paper, l10n, actions, gui, misc) }
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
@@ -36,7 +37,7 @@ dependencies {
     base.library(LibraryHelper.adventure("4.25.0"))
     base.library(base.depend.HikariCP)
 
-    implementation(base.depend.nbtapi)
+    implementation("de.tr7zw:item-nbt-api:2.16.0")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
 
     for (artifact in pluginBaseModules) {
