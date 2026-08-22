@@ -8,7 +8,7 @@ plugins {
 }
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.32")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.8.0")
 }
 val base = LibraryHelper(project)
 
@@ -16,7 +16,7 @@ println("Group:   ${rootProject.group}")
 println("Version: ${rootProject.version}")
 
 val targetJavaVersion = 8
-val pluginBaseModules = base.modules.run { listOf(library, paper, l10n, actions, gui, misc) }
+val pluginBaseModules = base.modules.run { listOf(library, message, paper, l10n, actions, gui, misc) }
 val shadowGroup = "top.mrxiaom.sweet.rewards.libs"
 
 repositories {
@@ -38,7 +38,6 @@ dependencies {
     base.library(base.depend.HikariCP)
 
     implementation("de.tr7zw:item-nbt-api:2.16.0")
-    implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
 
     for (artifact in pluginBaseModules) {
         implementation(artifact)
@@ -64,7 +63,6 @@ tasks {
         mapOf(
             "top.mrxiaom.pluginbase" to "base",
             "de.tr7zw.changeme.nbtapi" to "nbtapi",
-            "com.tcoded.folialib" to "folialib",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
         }
